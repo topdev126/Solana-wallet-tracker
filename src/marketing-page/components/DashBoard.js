@@ -24,19 +24,19 @@ export default function DashBoard() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: { xs: 3, sm: 6 },
+        gap: { xs: 1, sm: 2 },
       }}
     >
       <Typography
         component="h2"
-        variant="h4"
+        variant="h2"
         sx={{
           color: "text.primary",
           width: { sm: "100%", md: "60%" },
           textAlign: { sm: "left", md: "center" },
         }}
       >
-        Track the Top Memecoin Traders in Realtime
+        Track the Top Memecoin <br/>Traders in <span style={{color:"cornflowerblue"}}>Realtime</span>
       </Typography>
 
       <SearchBar />

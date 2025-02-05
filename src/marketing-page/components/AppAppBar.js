@@ -21,7 +21,7 @@ import { CryptoTrans } from "../TransFunc/CryptoTrans";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import SearchBar from "./SearchBar"; // Import SearchBar component
-
+import Typography from "@mui/material/Typography";
 import "react-toastify/dist/ReactToastify.css";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
@@ -56,9 +56,7 @@ export default function AppAppBar() {
     setSearchOpen(false);
   };
 
-  const {
-    ethConnectWallet,
-    ethCurrentAccount,
+  const {    
     SolConnectWallet,
     solCurrentAccount,
   } = useContext(CryptoTrans);
@@ -86,22 +84,69 @@ export default function AppAppBar() {
             <Box
               sx={{ flexGrow: 1, display: "flex", alignItems: "center", px: 0 }}
             >
-              <Link to="/">
-                <Sitemark />
-              </Link>
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                <Typography variant="h3" fontWeight="bold">
+                  Kolscan
+                </Typography>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    marginLeft: "15px",
+                    border: ".5px solid var(--border-color)",
+                    borderRadius: "8px",
+                    padding: "2px 10px",
+                    fontSize: "16px",
+                    fontWeight: "550",
+                    cursor: "pointer",
+                    height: "41px",
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "relative",
+                      minWidth: "20px",
+                      width: "20px",
+                      minHeight: "20px",
+                      height: "20px",
+                      overflow: "hidden",
+                      display: "inline-block",
+                      borderRadius: "1000px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <img
+                      alt="sol"
+                      loading="lazy"
+                      decoding="async"
+                      src="https://kolscan.io/images/Solana.webp"
+                      style={{
+                        position: "absolute",
+                        height: "20px",
+                        width: "20px",
+                        inset: 0,
+                        objectFit: "cover",
+                        filter: "blur(0px)",
+                      }}
+                    />
+                  </div>
+
+                  <h4 color="info">$197.28</h4>
+                </div>
+
                 <Link to="/Liquidity">
-                  <Button variant="text" color="info" size="small">
+                  <Button variant="text" color="info" size="large">
                     Trades
                   </Button>
                 </Link>
                 <Link to="/Borrows">
-                  <Button variant="text" color="info" size="small">
+                  <Button variant="text" color="info" size="large">
                     Tokens
                   </Button>
                 </Link>
                 <Link to="/WithDraw">
-                  <Button variant="text" color="info" size="small">
+                  <Button variant="text" color="info" size="large">
                     Leaderboard
                   </Button>
                 </Link>
@@ -131,15 +176,11 @@ export default function AppAppBar() {
                 <CopyToClipboard
                   text={
                     "Sol : " +
-                    solCurrentAccount +
-                    "   Eth : " +
-                    ethCurrentAccount
+                    solCurrentAccount 
                   }
                 >
                   <div style={{ cursor: "grab" }} onClick={triggerAlarm}>
-                    Sol : {shortenAddress(solCurrentAccount.toString())}
-                    &nbsp;&nbsp;&nbsp;&nbsp; Eth :
-                    {shortenAddress(ethCurrentAccount.toString())}
+                    {solCurrentAccount.toString().substring(0, 6)}  
                   </div>
                 </CopyToClipboard>
               )}

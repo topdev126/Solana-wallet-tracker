@@ -13,10 +13,11 @@ const Faqs = () => {
   };
   return (
     <>
-      <Typography variant="h5">
+      
+      <Box sx={{ width: "95vw", maxWidth: 700 }}>
+      <Typography variant="h5"  sx={{ textAlign: "left" }}>
         FAQs
       </Typography>
-      <Box sx={{ width: "95vw", maxWidth: 700 }}>
         <Accordion
           expanded={expanded === "panel1"}
           onChange={handleChange("panel1")}

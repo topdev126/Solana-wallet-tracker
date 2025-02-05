@@ -8,7 +8,7 @@ import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid2";
 import Paper from "@mui/material/Paper";
 import { useTheme } from "@mui/system";
-
+import Button from "@mui/material/Button";
 import sol_c from "./images/sol_c.png";
 import sol_t from "./images/sol_t.png";
 import eth_c from "./images/eth_c.png";
@@ -70,21 +70,19 @@ export default function Liquidity() {
 
   return (
     <Container
-      id="Liquidity"
+      id="Trades"
       sx={{
         pt: { xs: 4, sm: 12 },
         pb: { xs: 8, sm: 16 },
         position: "relative",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        gap: { xs: 3, sm: 6 },
       }}
     >
       <Box
         sx={{
           width: { sm: "100%", md: "60%" },
-          textAlign: { sm: "left", md: "center" },
+          textAlign: { sm: "left", md: "left" },
         }}
       >
         <Typography
@@ -93,49 +91,88 @@ export default function Liquidity() {
           gutterBottom
           sx={{ color: "text.primary" }}
         >
-          Liquidity
-        </Typography>
-        <Typography variant="body1" sx={{ color: "text.secondary" }}>
-          See what our customers love about our products. Discover how we excel
-          in efficiency, durability, and satisfaction. Join us for quality,
-          innovation, and reliable support.
+          Realtime Trades
         </Typography>
       </Box>
+      <Box p={1}>
+        <Button
+          color="primary"
+          size="small"
+          sx={{
+            border: "2px solid", // Add a border
+            borderColor: "primary.main", // Set the color of the border (primary color in this case)
+            borderRadius: "4px", // Optional: rounded corners (you can adjust this)
+          }}
+        >
+          Connect Wallet
+        </Button>
+      </Box>
 
-      <Grid container spacing={2}>
+      <Grid
+        container
+        spacing={3}
+        sx={{
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "1fr", // 1 column on extra-small screens
+            sm: "repeat(2, 1fr)", // 2 columns on small screens
+            md: "repeat(3, 1fr)",
+          },
+          gap: 2,
+        }}
+      >
         {userLiquidity.map((Liquidity, index) => (
-          <Grid size={{ xs: 12, sm: 6 }} key={index} sx={{ display: "flex" }}>
-            <Card
-              variant="outlined"
-              sx={{
-                display: "flex",
-                textAlign: "center",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                flexGrow: 1,
-              }}
+          <Box
+            p={1}
+            sx={{
+              border: "1px solid gray",
+              borderRadius: "8px",
+            }} // Just for visibility
+          >
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
             >
-              <Box
-                sx={{
-                  alignItems: "center",
-                }}
-              >
+              <Box display="flex" alignItems="center">
                 <img
-                  style={{ width: "50px", height: "50px" }}
-                  src={Liquidity.image1}
-                ></img>
+                  src="https://kolscan.io/images/Solana.webp"
+                  alt="Twitter"
+                  style={{ width: 40, height: 40, marginRight: 8 }}
+                />
+                <Typography variant="body1">Zinc</Typography>
               </Box>
-              <CardHeader title={Liquidity.name} />
-              <Grid container spacing={2}>
-                <Grid size={6}>
-                  <Item>{Liquidity.tvl}</Item>
-                </Grid>
-                <Grid size={6}>
-                  <Item>{Liquidity.apr}</Item>
-                </Grid>
-              </Grid>
-            </Card>
-          </Grid>
+              <Typography variant="body1">7N4bAy</Typography>
+            </Box>
+            <Box p={1} style={{ height: "200px", overflow: "auto" }}>
+              <Typography variant="body2">
+                This is the second div (below)
+                <br />
+                .This is the second div (below)
+                <br />
+                .This is the second div (below)
+                <br />
+                .This is the second div (below)
+                <br />
+                .This is the second div (below)aaaaaaaaaaaaaaaaaa
+                <br />
+                .This is the second div (below)
+                <br />
+                .This is the second div (below)
+                <br />
+                .This is the second div (below)
+                <br />
+                .This is the second div (below)
+                <br />
+                .This is the second div (below)
+                <br />
+                .This is the second div (below)
+                <br />
+                .This is the second div (below)
+                <br />.
+              </Typography>
+            </Box>
+          </Box>
         ))}
       </Grid>
     </Container>
