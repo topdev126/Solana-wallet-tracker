@@ -21,15 +21,15 @@ export default function MarketingPage(props) {
         <BrowserRouter>
           <AppAppBar />
           <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route path="/DashBoard" element={<DashBoard />} />
+            <Route exact path="/" element={<DashBoard />} />
+            {/* <Route path="/DashBoard" element={<DashBoard />} /> */}
             <Route path="/Borrows" element={<Borrows />} />
             <Route path="/WithDraw" element={<WithDraw />} />
             <Route path="/Liquidity" element={<Liquidity />} />
           </Routes>
         </BrowserRouter>
         <Divider />
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </AppTheme>
   );
