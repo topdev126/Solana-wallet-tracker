@@ -281,7 +281,7 @@ const Leaderboard = () => {
           </Button>
           <Button variant="outlined" sx={{ mx: 0.2 }}>
             Monthly
-          </Button>
+          </Button> 
         </Box>
       </Grid>
 
