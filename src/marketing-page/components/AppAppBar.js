@@ -41,6 +41,39 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   padding: "8px 12px",
 }));
 
+const LogoTypography = styled(Typography)(({ theme }) => ({
+  // ... existing LogoTypography styles ...
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  // ... existing StyledButton styles ...
+}));
+
+const PriceCard = styled(Paper)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+  padding: '8px 16px',
+  borderRadius: '12px',
+  backgroundColor: theme.palette.mode === 'dark'
+    ? 'rgba(255, 255, 255, 0.05)'
+    : 'rgba(0, 0, 0, 0.02)',
+  border: `1px solid ${theme.palette.mode === 'dark' 
+    ? 'rgba(255, 255, 255, 0.1)'
+    : 'rgba(0, 0, 0, 0.05)'}`,
+  transition: 'all 0.2s ease-in-out',
+  '&:hover': {
+    backgroundColor: theme.palette.mode === 'dark'
+      ? 'rgba(255, 255, 255, 0.1)'
+      : 'rgba(0, 0, 0, 0.04)',
+    transform: 'translateY(-2px)',
+  },
+}));
+
+const WalletButton = styled(Button)(({ theme }) => ({
+  // ... existing WalletButton styles ...
+}));
+
 export default function AppAppBar() {
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false); // State for search modal
