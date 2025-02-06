@@ -16,7 +16,7 @@ import eth_t from "./images/eth_t.png";
 import base_c from "./images/base_c.png";
 import base_t from "./images/base_t.png";
 
-const userLiquidity = [
+const userTrade = [
   {
     image1: eth_t,
     name: "Etherum-USDT",
@@ -65,14 +65,14 @@ const Item = styled(Paper)(({ theme }) => ({
   }),
 }));
 
-export default function Liquidity() {
+export default function Trade() {
   const theme = useTheme();
 
   return (
     <Container
       id="Trades"
       sx={{
-        pt: { xs: 4, sm: 12 },
+        pt: { xs: 6, sm: 16 },
         pb: { xs: 8, sm: 16 },
         position: "relative",
         display: "flex",
@@ -121,7 +121,7 @@ export default function Liquidity() {
           gap: 2,
         }}
       >
-        {userLiquidity.map((Liquidity, index) => (
+        {userTrade.map((Trade, index) => (
           <Box
             p={1}
             sx={{

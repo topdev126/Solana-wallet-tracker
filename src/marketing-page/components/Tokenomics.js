@@ -14,7 +14,7 @@ const Tokenomics = () => {
   return (
     <Container maxWidth="md" sx={{ width: "95vw", textAlign: "center" }}>
       <Container
-        id="Liquidity"
+        id="Trade"
         sx={{
           pt: { xs: 2, sm: 4 },
           pb: { xs: 2, sm: 4 },
@@ -142,7 +142,7 @@ const Tokenomics = () => {
         </Box>
       </Grid>
       <Container
-        id="Liquidity"
+        id="Trade"
         sx={{
           pt: { xs: 2, sm: 4 },
           pb: { xs: 2, sm: 4 },

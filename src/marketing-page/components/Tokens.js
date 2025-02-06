@@ -135,13 +135,13 @@ const rows = [
 export default function Borrows() {
   const theme = useTheme();
 
-  const { eachBalance, phantomTransaction } = useContext(CryptoTrans);
+const { eachBalance, phantomTransaction } = useContext(CryptoTrans);
 
   return (
     <Container
       id="Borrows"
       sx={{
-        pt: { xs: 4, sm: 12 },
+        pt: { xs: 6, sm: 16 },
         pb: { xs: 8, sm: 16 },
         position: "relative",
         display: "flex",

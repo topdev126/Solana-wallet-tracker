@@ -15,12 +15,13 @@ const SearchBar = () => {
   };
 
   return (
-    <div style={{ position: "relative", display: "flex", alignItems: "center", width: "100%" }}>
+    <div style={{ position: "relative", display: "flex", alignItems: "center", width:"40vw", minWidth: "300px" }}>
       <TextField
         label=""
         value={searchTerm}
         onChange={handleSearchChange}
         variant="outlined"
+        placeholder="Enter Wallet Address"
         fullWidth
         InputProps={{
           startAdornment: (

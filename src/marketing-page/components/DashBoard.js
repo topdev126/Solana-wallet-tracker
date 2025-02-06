@@ -18,7 +18,7 @@ export default function DashBoard() {
     <Container
       id="DashBoard"
       sx={{
-        pt: { xs: 4, sm: 12 },
+        pt: { xs: 6, sm: 16 },
         pb: { xs: 8, sm: 16 },
         position: "relative",
         display: "flex",
@@ -43,7 +43,6 @@ export default function DashBoard() {
       <Transactions />
       <Tokenomics />
       <Faqs />
-
     </Container>
   );
 }

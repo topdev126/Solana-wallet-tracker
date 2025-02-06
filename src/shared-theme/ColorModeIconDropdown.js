@@ -1,33 +1,15 @@
 import * as React from "react";
 import SettingsIcon from "@mui/icons-material/Settings";
-import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import { useColorScheme } from "@mui/material/styles";
-import Switch from "@mui/material/Switch";
-import Select from "@mui/material/Select";
-import MenuItemSelect from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
+import Settings from "../marketing-page/components/Settings";
 
 export default function SettingsDropdown(props) {
-  const { mode, setMode } = useColorScheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [platform, setPlatform] = React.useState("Pump");
-  const [isSoundOn, setSoundOn] = React.useState(true);
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
-  const handlePlatformChange = (event) => setPlatform(event.target.value);
-
-  // Set theme toggle state based on current mode
-  const toggleTheme = () => {
-    setMode(mode === "light" ? "dark" : "light");
-  };
-
-  const toggleSound = () => setSoundOn((prev) => !prev);
 
   return (
     <React.Fragment>
@@ -62,7 +44,8 @@ export default function SettingsDropdown(props) {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem>
+        <Settings />
+        {/* <MenuItem>
           Theme
           <Switch checked={mode === "dark"} onChange={toggleTheme} />
         </MenuItem>
@@ -82,7 +65,7 @@ export default function SettingsDropdown(props) {
               </Select>
             </FormControl>
           </Box>
-        </MenuItem>
+        </MenuItem> */}
       </Menu>
     </React.Fragment>
   );
