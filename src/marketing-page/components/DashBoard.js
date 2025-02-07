@@ -271,6 +271,30 @@ export default function DashBoard() {
                 border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
               }}
             >
+                  <Box
+                  component="img"
+                  src="images/hype-your-pump-solana-meme-coin-token-crypto-launch-defi-nft-subscribers.png"
+                  alt="Hype Your Pump"
+                  sx={{
+                    width: "100%",
+                    height: "auto",
+                    borderRadius: 4,
+                    transform: "scale(1.02)",
+                    transition: "transform 0.3s ease-in-out",
+                    animation: `${float} 6s ease-in-out infinite`,
+                    filter:
+                      theme.palette.mode === "dark"
+                        ? "brightness(0.9) contrast(1.1)"
+                        : "none",
+                    "&:hover": {
+                      transform: "scale(1.03)",
+                    },
+                    boxShadow:
+                      theme.palette.mode === "dark"
+                        ? `0 8px 32px ${alpha(theme.palette.primary.main, 0.2)}`
+                        : `0 8px 32px ${alpha(theme.palette.primary.main, 0.1)}`,
+                  }}
+                />
               <Typography 
                 variant="h5" 
                 sx={{ 
