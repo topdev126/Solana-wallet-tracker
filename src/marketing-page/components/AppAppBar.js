@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import { styled, alpha } from "@mui/material/styles";
+import { styled, keyframes } from "@mui/material/styles";
+import { alpha } from '@mui/material/styles';
 import { Box, Typography, Button, Avatar, Paper } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -25,60 +26,233 @@ import Tooltip from "@mui/material/Tooltip";
 
 import "react-toastify/dist/ReactToastify.css";
 
-const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+const slideIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const glowKeyframes = keyframes`
+  0% { text-shadow: 0 0 10px rgba(99,180,255,0.5); }
+  50% { text-shadow: 0 0 20px rgba(99,180,255,0.8), 0 0 30px rgba(99,180,255,0.3); }
+  100% { text-shadow: 0 0 10px rgba(99,180,255,0.5); }
+`;
+
+const pulseKeyframes = keyframes`
+  0% { box-shadow: 0 0 0 0 rgba(99,180,255, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(99,180,255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(99,180,255, 0); }
+`;
+
+const shine = keyframes`
+  to {
+    background-position: 200% center;
+  }
+`;
+
+const pulse = keyframes`
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+`;
+
+const slideDown = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const glow = keyframes`
+  0% { box-shadow: 0 0 5px rgba(33,150,243,0.2); }
+  50% { box-shadow: 0 0 20px rgba(33,150,243,0.4); }
+  100% { box-shadow: 0 0 5px rgba(33,150,243,0.2); }
+`;
+
+const float = keyframes`
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0px); }
+`;
+
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+  position: 'fixed',
+  background: 'rgba(255, 255, 255, 0.98)',
+  boxShadow: '0 4px 30px rgba(0, 0, 0, 0.05)',
+  backdropFilter: 'blur(10px)',
+  borderBottom: '1px solid rgba(231, 235, 240, 0.8)',
+  animation: `${slideDown} 0.5s ease-out`,
+}));
+
+const StyledToolbar = styled(Toolbar)(({ theme, scrolled }) => ({
   display: "flex",
+  flexDirection: "column",
   alignItems: "center",
-  justifyContent: "space-between",
+  justifyContent: "center",
   flexShrink: 0,
-  borderRadius: `calc(${theme.shape.borderRadius}px + 8px)`,
-  backdropFilter: "blur(24px)",
-  border: "1px solid",
-  borderColor: (theme.vars || theme).palette.divider,
-  backgroundColor: theme.vars
-    ? `rgba(${theme.vars.palette.background.defaultChannel} / 0.4)`
-    : alpha(theme.palette.background.default, 0.4),
-  boxShadow: (theme.vars || theme).shadows[1],
-  padding: "8px 12px",
+  backdropFilter: "blur(20px)",
+  background: scrolled ? 'rgba(20, 25, 35, 0.95)' : 'rgba(20, 25, 35, 0.8)',
+  borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+  padding: scrolled ? "8px 24px" : "12px 24px",
+  transition: 'all 0.3s ease-in-out',
 }));
 
-const LogoTypography = styled(Typography)(({ theme }) => ({
-  // ... existing LogoTypography styles ...
-}));
+const LogoTypography = styled(Typography)({
+  fontSize: '32px',
+  fontWeight: 800,
+  background: 'linear-gradient(to right, #2196F3, #64B5F6, #2196F3, #64B5F6)',
+  backgroundSize: '200% auto',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  animation: `${shine} 3s linear infinite`,
+  cursor: 'pointer',
+  letterSpacing: '-0.5px',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    transform: 'scale(1.05)',
+    animation: `${shine} 1.5s linear infinite`,
+  }
+});
 
-const StyledButton = styled(Button)(({ theme }) => ({
-  // ... existing StyledButton styles ...
-}));
-
-const PriceCard = styled(Paper)(({ theme }) => ({
+const PriceDisplay = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   gap: '8px',
   padding: '8px 16px',
-  borderRadius: '12px',
-  backgroundColor: theme.palette.mode === 'dark'
-    ? 'rgba(255, 255, 255, 0.05)'
-    : 'rgba(0, 0, 0, 0.02)',
-  border: `1px solid ${theme.palette.mode === 'dark' 
-    ? 'rgba(255, 255, 255, 0.1)'
-    : 'rgba(0, 0, 0, 0.05)'}`,
-  transition: 'all 0.2s ease-in-out',
+  borderRadius: '8px',
+  backgroundColor: 'rgba(33, 150, 243, 0.08)',
+  border: '1px solid rgba(33, 150, 243, 0.1)',
+  animation: `${fadeIn} 0.5s ease-out`,
   '&:hover': {
-    backgroundColor: theme.palette.mode === 'dark'
-      ? 'rgba(255, 255, 255, 0.1)'
-      : 'rgba(0, 0, 0, 0.04)',
+    animation: `${glow} 2s infinite`,
     transform: 'translateY(-2px)',
   },
+  transition: 'all 0.3s ease',
+});
+
+const SearchIconButton = styled(IconButton)(({ theme }) => ({
+  background: 'rgba(255, 255, 255, 0.03)',
+  borderRadius: '12px',
+  padding: '8px',
+  color: 'white',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    background: 'rgba(255, 255, 255, 0.1)',
+    transform: 'translateY(-2px)',
+  }
 }));
 
-const WalletButton = styled(Button)(({ theme }) => ({
-  // ... existing WalletButton styles ...
+const ActionIconButton = styled(IconButton)(({ theme }) => ({
+  background: 'linear-gradient(135deg, #E3F2FD, #BBDEFB)',
+  borderRadius: '16px',
+  padding: '12px',
+  width: '46px',
+  height: '46px',
+  boxShadow: '0 4px 15px rgba(33,150,243,0.1)',
+  border: '2px solid rgba(255,255,255,0.8)',
+  color: '#1976D2',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  '&:hover': {
+    transform: 'translateY(-3px) scale(1.05)',
+    boxShadow: '0 8px 25px rgba(33,150,243,0.2)',
+    background: 'linear-gradient(135deg, #E3F2FD, #90CAF9)',
+  },
+  '& svg': {
+    fontSize: '1.3rem',
+    transition: 'transform 0.3s ease',
+  },
+  '&:hover svg': {
+    transform: 'scale(1.1)',
+  }
 }));
+
+const WalletButton = styled(Button)(({ connected }) => ({
+  backgroundColor: connected ? 'white' : '#2196F3',
+  color: connected ? '#1976D2' : 'white',
+  padding: '8px 20px',
+  borderRadius: '8px',
+  fontSize: '14px',
+  fontWeight: 600,
+  textTransform: 'none',
+  border: connected ? '1px solid #E7EBF0' : 'none',
+  boxShadow: connected ? 'none' : '0 4px 12px rgba(33, 150, 243, 0.2)',
+  animation: `${fadeIn} 0.5s ease-out`,
+  '&:hover': {
+    backgroundColor: connected ? 'white' : '#1976D2',
+    boxShadow: '0 4px 12px rgba(33, 150, 243, 0.2)',
+    transform: 'translateY(-2px)',
+    animation: `${glow} 2s infinite`,
+  },
+  transition: 'all 0.3s ease',
+}));
+
+const NavButton = styled(Button)(({ active }) => ({
+  color: active ? '#1976D2' : '#64748B',
+  padding: '6px 16px',
+  fontSize: '15px',
+  fontWeight: 600,
+  textTransform: 'none',
+  borderRadius: '8px',
+  backgroundColor: active ? 'rgba(33, 150, 243, 0.08)' : 'transparent',
+  animation: active ? `${fadeIn} 0.3s ease-out` : 'none',
+  '&:hover': {
+    backgroundColor: 'rgba(33, 150, 243, 0.08)',
+    transform: 'translateY(-2px)',
+    animation: `${pulse} 0.3s ease-in-out`,
+  },
+  transition: 'all 0.2s ease',
+}));
+
+const ActionButton = styled(IconButton)({
+  color: '#64748B',
+  padding: '8px',
+  borderRadius: '8px',
+  overflow: 'hidden',
+  position: 'relative',
+  '&:hover': {
+    backgroundColor: 'rgba(33, 150, 243, 0.08)',
+    color: '#1976D2',
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      top: '-50%',
+      left: '-50%',
+      width: '200%',
+      height: '200%',
+      background: 'radial-gradient(circle, rgba(33,150,243,0.2) 0%, transparent 70%)',
+      animation: `${pulse} 1s ease-out`,
+    }
+  },
+  transition: 'all 0.2s ease',
+});
 
 export default function AppAppBar() {
   const [open, setOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false); // State for search modal
+  const [searchOpen, setSearchOpen] = useState(false);
   const [solPrice, setSolPrice] = useState(null);
+  const [scrolled, setScrolled] = useState(false);
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const [visible, setVisible] = useState(true);
   const navigate = useNavigate();
+  const [activeNav, setActiveNav] = useState('trade');
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -118,224 +292,124 @@ export default function AppAppBar() {
 
     return () => clearInterval(interval);
   }, []);
+
+  // Handle scroll events
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.pageYOffset;
+      
+      // Determine if we're scrolled past the threshold
+      setScrolled(currentScrollPos > 20);
+      
+      // Show/hide based on scroll direction
+      setVisible(
+        (prevScrollPos > currentScrollPos && currentScrollPos > 0) || // Scrolling up
+        currentScrollPos < 10 // At top
+      );
+      
+      setPrevScrollPos(currentScrollPos);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [prevScrollPos]);
+
   return (
     <>
-      <AppBar
-        // position="fixed"
-        enableColorOnDark
-        sx={{
-          boxShadow: 0,
-          bgcolor: "transparent",
-          backgroundImage: "none",
-          mt: "calc(var(--template-frame-height, 0px) + 28px)",
-        }}
-      >
-        <Container maxWidth="lg">
-          <StyledToolbar variant="dense" disableGutters>
-            <Box
-              sx={{ flexGrow: 1, display: "flex", alignItems: "center", px: 0 }}
-            >
-              <Box
-                sx={{
-                  display: { xs: "none", md: "flex" },
-                  alignItems: "center",
-                }}
-              >
-                <Paper>
-                  <Typography
-                    variant="h3"
-                    fontWeight="bold"
-                    sx={{ cursor: "pointer" }}
-                    onClick={() => navigate("/")}
-                  >
-                    Kolscan
-                  </Typography>
-                </Paper>
-
-                <Paper
-                  elevation={1}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    ml: 2,
-                    border: "0.5px solid var(--border-color)",
-                    borderRadius: 1,
-                    p: "2px 10px",
-                    fontSize: 16,
-                    fontWeight: 550,
-                    cursor: "pointer",
-                    height: 41,
-                  }}
-                  onClick={() =>
-                    window.open(
-                      "https://www.tradingview.com/chart/?symbol=BINANCE%3ASOLUSDT.P",
-                      "_blank"
-                    )
-                  }
-                >
-                  <Avatar
-                    src="/images/Solana.webp"
-                    alt="Solana"
-                    sx={{ width: 20, height: 20 }}
-                  />
-                  <Typography variant="h6">
-                    {solPrice ? `$${solPrice}` : ""}
-                  </Typography>
-                </Paper>
-
-                <Link to="/trades" style={{ textDecoration: "none" }}>
-                  <Button variant="text" color="info" size="large">
-                    Trades
-                  </Button>
-                </Link>
-                <Link to="/tokens" style={{ textDecoration: "none" }}>
-                  <Button variant="text" color="info" size="large">
-                    Tokens
-                  </Button>
-                </Link>
-                <Link to="/leaderboard" style={{ textDecoration: "none" }}>
-                  <Button variant="text" color="info" size="large">
-                    Leaderboard
-                  </Button>
-                </Link>
-              </Box>
-            </Box>
+      <StyledAppBar elevation={0}>
+        <Container maxWidth="xl">
+          <Box sx={{ py: 1.5 }}>
             <Box
               sx={{
-                display: { xs: "none", md: "flex" },
-                gap: 1,
-                alignItems: "center",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}
             >
-              <IconButton style={{ marginLeft: 8 }} onClick={handleSearchOpen}>
-                <SearchIcon />
-              </IconButton>
-              <Paper>
-                {!solCurrentAccount ? (
-                  <Button
-                    color="primary"
-                    variant="outlined"
-                    size="small"
-                    sx={{
-                      background: "#b3daff", // Set background to light blue
-                      color: "black", // Set text color to white
-                      "&.MuiButton-root:hover": {
-                        backgroundColor: "#66b5ff", // Set background color to blue on hover
-                      },
-                      borderColor: "#4da9ff",
-                    }}
-                    onClick={SolConnectWallet}
-                  >
-                    Connect Wallet
-                  </Button>
-                ) : (
-                  <CopyToClipboard text={"Sol : " + solCurrentAccount}>
-                    <div
-                      style={{
-                        minWidth:"90px",
-                        cursor: "pointer",
-                        padding: "5px 10px", // Optional padding for better visual spacing
-                        border: "1px solid #4da9ff", // Border color
-                        borderRadius: "5px", // Rounded corners
-                        background: "#b3daff", // Light blue background
-                        display: "flex", // Flexbox to align items horizontally
-                        alignItems: "center", // Align items (text and icon) vertically centered
+              {/* Left Section */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <LogoTypography onClick={() => navigate("/")}>
+                  KolScan
+                </LogoTypography>
+                
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  {['trades', 'tokens', 'leaderboard'].map((item) => (
+                    <NavButton
+                      key={item}
+                      active={activeNav === item}
+                      onClick={() => {
+                        setActiveNav(item);
+                        navigate(`/${item}`);
                       }}
-                      onClick={() => navigate("/account")}
                     >
-                      {/* Sol Account */}
-                      <span style={{ flex: 1 }}>
-                        {solCurrentAccount.toString().substring(0, 6)}
-                      </span>
-                  
-                      {/* Close Icon */}
-                      <Tooltip title="Disconnect" arrow>
-                        <CloseIcon
-                          onClick={(e) => {
-                            e.stopPropagation(); // Prevent the tooltip from triggering the `div` click event
-                            // Your close logic here
-                          }}
-                          sx={{
-                            cursor: "pointer",
-                            fontSize: "12px", // Smaller close icon size
-                            "&:hover": {
-                              color: "#f44336", // Change to red when hovered
-                            },
-                          }}
-                        />
-                      </Tooltip>
-                    </div>
-                  </CopyToClipboard>
-                  
-                )}
-              </Paper>
+                      {item.charAt(0).toUpperCase() + item.slice(1)}
+                    </NavButton>
+                  ))}
+                </Box>
+              </Box>
 
-              <ColorModeIconDropdown />
-            </Box>
-            {/* <Box sx={{ display: { xs: "flex", md: "none" }, gap: 1 }}>
-              <ColorModeIconDropdown size="medium" />
-              <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
-                <MenuIcon />
-              </IconButton>
-              <Drawer
-                anchor="top"
-                open={open}
-                onClose={toggleDrawer(false)}
-                PaperProps={{
-                  sx: {
-                    top: "var(--template-frame-height, 0px)",
-                  },
-                }}
-              >
-                <Box sx={{ p: 2, backgroundColor: "background.default" }}>
+              {/* Right Section */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                <PriceDisplay>
                   <Box
+                    component="img"
+                    src="https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png"
+                    sx={{ width: 20, height: 20 }}
+                  />
+                  <Typography
                     sx={{
-                      display: "flex",
-                      justifyContent: "flex-end",
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: '#1976D2',
                     }}
                   >
-                    <IconButton onClick={toggleDrawer(false)}>
-                      <CloseRoundedIcon />
-                    </IconButton>
-                  </Box>
+                    ${solPrice}
+                  </Typography>
+                </PriceDisplay>
 
-                  <MenuItem>DashBoard</MenuItem>
-                  <MenuItem>Trade</MenuItem>
-                  <MenuItem>Borrow/Rent</MenuItem>
-                  <MenuItem>WithDraw</MenuItem>
-                  <MenuItem>DashBoard</MenuItem>
-                  <Divider sx={{ my: 3 }} />
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <ActionButton onClick={() => setSearchOpen(true)}>
+                    <SearchIcon />
+                  </ActionButton>
+                  <ColorModeIconDropdown />
                 </Box>
-              </Drawer>
-            </Box> */}
-          </StyledToolbar>
+
+                <WalletButton
+                  connected={!!solCurrentAccount}
+                  onClick={solCurrentAccount ? () => navigate("/account") : SolConnectWallet}
+                >
+                  {solCurrentAccount 
+                    ? solCurrentAccount.toString().substring(0, 6)
+                    : 'Connect Wallet'
+                  }
+                </WalletButton>
+              </Box>
+            </Box>
+          </Box>
         </Container>
-      </AppBar>
+      </StyledAppBar>
+
+      {/* Spacer */}
+      <Box sx={{ height: '72px' }} />
 
       {/* Search Modal */}
       <Modal
         open={searchOpen}
-        onClose={handleSearchClose}
-        aria-labelledby="search-modal"
-        aria-describedby="search-bar-modal"
+        onClose={() => setSearchOpen(false)}
         sx={{
-          backdropFilter: "blur(10px)", // Blurred background effect
-          bgcolor: "rgba(0, 0, 0, 0.3)", // Semi-transparent dark background
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'center',
+          pt: 10,
+          px: 2,
         }}
       >
         <Box
           sx={{
-            position: "absolute",
-            top: "20%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            // p: 4,
+            width: '100%',
+            maxWidth: 600,
             borderRadius: 2,
-            minWidth: 300,
-            opacity: 0.95, // Adjusted opacity for the modal content
+            overflow: 'hidden',
           }}
         >
           <SearchBar />
