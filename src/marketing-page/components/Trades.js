@@ -30,17 +30,27 @@ const ripple = keyframes`
 `;
 
 const TradeCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(20, 25, 35, 0.7)',
+  background: theme.palette.mode === 'dark' 
+    ? alpha(theme.palette.background.paper, 0.8)
+    : 'rgba(255, 255, 255, 0.95)',
   backdropFilter: 'blur(12px)',
   borderRadius: '24px',
-  border: '1px solid rgba(255, 255, 255, 0.05)',
+  border: `1px solid ${theme.palette.mode === 'dark' 
+    ? alpha(theme.palette.primary.main, 0.15)
+    : alpha('#E3ECFF', 0.8)}`,
   position: 'relative',
   overflow: 'visible',
   transition: 'all 0.4s ease-in-out',
+  boxShadow: theme.palette.mode === 'dark'
+    ? '0 4px 24px rgba(0, 0, 0, 0.2)'
+    : '0 4px 24px rgba(147, 197, 253, 0.06)',
   '&:hover': {
     transform: 'translateY(-8px)',
+    boxShadow: theme.palette.mode === 'dark'
+      ? '0 8px 32px rgba(0, 0, 0, 0.3)'
+      : '0 8px 32px rgba(147, 197, 253, 0.12)',
     '& .trade-glow': {
-      opacity: 0.15,
+      opacity: theme.palette.mode === 'dark' ? 0.1 : 0.15,
       transform: 'scale(1.1)',
     }
   },
@@ -50,7 +60,9 @@ const TradeCard = styled(Card)(({ theme }) => ({
     inset: '-1px',
     borderRadius: '25px',
     padding: '1px',
-    background: 'linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05), rgba(255,255,255,0))',
+    background: theme.palette.mode === 'dark'
+      ? 'linear-gradient(45deg, rgba(66,153,225,0.2), rgba(99,179,237,0.1), rgba(255,255,255,0.05))'
+      : 'linear-gradient(45deg, rgba(147,197,253,0.3), rgba(206,225,255,0.2), rgba(255,255,255,0.1))',
     WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
     WebkitMaskComposite: 'xor',
     maskComposite: 'exclude',
@@ -73,10 +85,18 @@ const GlowEffect = styled(Box)({
 const StatsContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   gap: '12px',
-  padding: '16px',
-  background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)',
-  borderRadius: '16px',
-  border: '1px solid rgba(255,255,255,0.05)',
+  padding: '24px',
+  background: theme.palette.mode === 'dark'
+    ? 'linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(30, 41, 59, 0.6) 100%)'
+    : 'linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%)',
+  backdropFilter: 'blur(10px)',
+  borderRadius: '20px',
+  border: `1px solid ${theme.palette.mode === 'dark'
+    ? alpha(theme.palette.primary.main, 0.15)
+    : alpha(theme.palette.primary.main, 0.08)}`,
+  boxShadow: theme.palette.mode === 'dark'
+    ? '0 4px 20px rgba(0, 0, 0, 0.25)'
+    : '0 4px 20px rgba(147, 197, 253, 0.08)',
 }));
 
 const ActionButton = styled(IconButton)(({ theme }) => ({
@@ -166,7 +186,9 @@ export default function Trade() {
   return (
     <Box
       sx={{
-        background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
+        background: theme.palette.mode === 'dark'
+          ? 'linear-gradient(135deg, #0A1929 0%, #111827 50%, #1E1E1E 100%)'
+          : 'linear-gradient(135deg, #F5F9FF 0%, #F0F6FF 50%, #EBF3FF 100%)',
         minHeight: '100vh',
         position: 'relative',
         overflow: 'hidden',
@@ -174,7 +196,7 @@ export default function Trade() {
         pb: 12,
       }}
     >
-      {/* Background Elements */}
+      {/* Updated Background Elements */}
       <Box
         sx={{
           position: 'absolute',
@@ -182,13 +204,15 @@ export default function Trade() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'radial-gradient(circle at 20% 20%, rgba(99,180,255,0.05) 0%, transparent 40%)',
+          background: theme.palette.mode === 'dark'
+            ? 'radial-gradient(circle at 20% 20%, rgba(66,153,225,0.05) 0%, transparent 40%)'
+            : 'radial-gradient(circle at 20% 20%, rgba(147,197,253,0.08) 0%, transparent 40%)',
           zIndex: 0,
         }}
       />
 
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
-        {/* Header Section */}
+        {/* Updated Header Section typography colors */}
         <Box sx={{ mb: 8 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
             <Box>
@@ -196,7 +220,7 @@ export default function Trade() {
                 variant="h3"
                 sx={{
                   fontWeight: 800,
-                  background: 'linear-gradient(90deg, #FFFFFF 0%, #63B4FF 100%)',
+                  background: 'linear-gradient(90deg, #2065D1 0%, #32C5FF 100%)',
                   backgroundSize: '200% auto',
                   animation: `${gradientMove} 3s ease infinite`,
                   WebkitBackgroundClip: 'text',
@@ -209,7 +233,7 @@ export default function Trade() {
               <Typography
                 variant="subtitle1"
                 sx={{
-                  color: 'rgba(255,255,255,0.6)',
+                  color: alpha(theme.palette.text.primary, 0.7),
                   maxWidth: 600,
                   lineHeight: 1.6,
                 }}
@@ -218,20 +242,39 @@ export default function Trade() {
               </Typography>
             </Box>
             
+            {/* Updated Action Buttons */}
             <Box sx={{ display: 'flex', gap: 2 }}>
-              <ActionButton>
+              <ActionButton sx={{ 
+                background: alpha(theme.palette.primary.main, 0.05),
+                color: theme.palette.primary.main,
+                '&:hover': {
+                  background: alpha(theme.palette.primary.main, 0.1),
+                }
+              }}>
                 <FilterListIcon />
               </ActionButton>
-              <ActionButton>
+              <ActionButton sx={{ 
+                background: alpha(theme.palette.primary.main, 0.05),
+                color: theme.palette.primary.main,
+                '&:hover': {
+                  background: alpha(theme.palette.primary.main, 0.1),
+                }
+              }}>
                 <TimelineIcon />
               </ActionButton>
-              <ActionButton>
+              <ActionButton sx={{ 
+                background: alpha(theme.palette.primary.main, 0.05),
+                color: theme.palette.primary.main,
+                '&:hover': {
+                  background: alpha(theme.palette.primary.main, 0.1),
+                }
+              }}>
                 <SwapVertIcon />
               </ActionButton>
             </Box>
           </Box>
 
-          {/* Stats Overview */}
+          {/* Updated Stats Container */}
           <StatsContainer>
             {[
               { label: '24h Volume', value: '$245.8M' },
@@ -252,17 +295,24 @@ export default function Trade() {
                     top: '50%',
                     transform: 'translateY(-50%)',
                     width: '1px',
-                    height: '70%',
-                    background: 'rgba(255,255,255,0.1)',
+                    height: '60%',
+                    background: theme.palette.mode === 'dark'
+                      ? alpha(theme.palette.primary.main, 0.15)
+                      : alpha(theme.palette.primary.main, 0.08),
                   }
                 }}
               >
                 <Typography
                   variant="h5"
                   sx={{
-                    color: 'white',
                     fontWeight: 700,
                     mb: 0.5,
+                    background: theme.palette.mode === 'dark'
+                      ? 'linear-gradient(90deg, #60A5FA 0%, #93C5FD 100%)'
+                      : 'linear-gradient(90deg, #2563EB 0%, #3B82F6 100%)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
                   }}
                 >
                   {stat.value}
@@ -270,8 +320,11 @@ export default function Trade() {
                 <Typography
                   variant="body2"
                   sx={{
-                    color: 'rgba(255,255,255,0.5)',
+                    color: theme.palette.mode === 'dark'
+                      ? alpha(theme.palette.common.white, 0.6)
+                      : alpha(theme.palette.common.black, 0.6),
                     fontSize: '0.875rem',
+                    fontWeight: 500,
                   }}
                 >
                   {stat.label}
@@ -299,9 +352,11 @@ export default function Trade() {
                             position: 'absolute',
                             inset: -2,
                             borderRadius: '50%',
-                            background: `linear-gradient(45deg, ${trade.type === 'Buy' ? '#4CAF50' : '#f44336'}, #2196F3)`,
+                            background: trade.type === 'Buy' 
+                              ? 'linear-gradient(45deg, rgba(52,211,153,0.2), rgba(16,185,129,0.1))'
+                              : 'linear-gradient(45deg, rgba(248,113,113,0.2), rgba(239,68,68,0.1))',
                             animation: `${ripple} 2s infinite`,
-                            opacity: 0.2,
+                            opacity: 0.3,
                           }
                         }}
                       >
@@ -312,7 +367,7 @@ export default function Trade() {
                             width: 52,
                             height: 52,
                             borderRadius: '50%',
-                            border: '2px solid rgba(255,255,255,0.1)',
+                            border: '2px solid rgba(147,197,253,0.2)',
                             position: 'relative',
                             zIndex: 1,
                           }}
@@ -322,7 +377,7 @@ export default function Trade() {
                         <Typography
                           variant="body2"
                           sx={{
-                            color: 'rgba(255,255,255,0.6)',
+                            color: alpha(theme.palette.text.primary, 0.6),
                             mb: 0.5,
                           }}
                         >
@@ -331,7 +386,7 @@ export default function Trade() {
                         <Typography
                           variant="h6"
                           sx={{
-                            color: 'white',
+                            color: theme.palette.text.primary,
                             fontFamily: 'monospace',
                             letterSpacing: '0.5px',
                           }}
@@ -346,16 +401,16 @@ export default function Trade() {
                         py: 1,
                         borderRadius: '12px',
                         background: trade.type === 'Buy' 
-                          ? 'rgba(76,175,80,0.1)'
-                          : 'rgba(244,67,54,0.1)',
+                          ? 'rgba(16,185,129,0.1)'
+                          : 'rgba(239,68,68,0.1)',
                         border: `1px solid ${trade.type === 'Buy' 
-                          ? 'rgba(76,175,80,0.2)'
-                          : 'rgba(244,67,54,0.2)'}`,
+                          ? 'rgba(16,185,129,0.2)'
+                          : 'rgba(239,68,68,0.2)'}`,
                       }}
                     >
                       <Typography
                         sx={{
-                          color: trade.type === 'Buy' ? '#4CAF50' : '#f44336',
+                          color: trade.type === 'Buy' ? '#10B981' : '#EF4444',
                           fontWeight: 600,
                           fontSize: '0.875rem',
                         }}
@@ -369,16 +424,20 @@ export default function Trade() {
                   <Box
                     sx={{
                       p: 2.5,
-                      background: 'rgba(255,255,255,0.02)',
+                      background: theme.palette.mode === 'dark'
+                        ? alpha(theme.palette.background.paper, 0.4)
+                        : alpha('#F8FAFF', 0.5),
                       borderRadius: '16px',
-                      border: '1px solid rgba(255,255,255,0.03)',
+                      border: `1px solid ${theme.palette.mode === 'dark'
+                        ? alpha(theme.palette.primary.main, 0.15)
+                        : alpha('#E3ECFF', 0.8)}`,
                     }}
                   >
                     <Box sx={{ mb: 2 }}>
                       <Typography
                         variant="h5"
                         sx={{
-                          color: '#63B4FF',
+                          color: '#3B82F6',
                           fontWeight: 700,
                           mb: 0.5,
                           fontFamily: 'monospace',
@@ -389,7 +448,7 @@ export default function Trade() {
                       <Typography
                         variant="body2"
                         sx={{
-                          color: 'rgba(255,255,255,0.4)',
+                          color: alpha(theme.palette.text.primary, 0.5),
                           fontFamily: 'monospace',
                         }}
                       >
@@ -403,7 +462,7 @@ export default function Trade() {
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         pt: 2,
-                        borderTop: '1px solid rgba(255,255,255,0.05)',
+                        borderTop: `1px solid ${alpha('#E3ECFF', 0.8)}`,
                       }}
                     >
                       <Box
@@ -411,13 +470,13 @@ export default function Trade() {
                           px: 2,
                           py: 1,
                           borderRadius: '8px',
-                          background: 'rgba(255,255,255,0.03)',
-                          border: '1px solid rgba(255,255,255,0.05)',
+                          background: alpha('#F8FAFF', 0.7),
+                          border: `1px solid ${alpha('#E3ECFF', 0.8)}`,
                         }}
                       >
                         <Typography
                           sx={{
-                            color: 'white',
+                            color: theme.palette.text.primary,
                             fontSize: '0.875rem',
                             fontWeight: 500,
                           }}
@@ -428,7 +487,7 @@ export default function Trade() {
                       <Box sx={{ textAlign: 'right' }}>
                         <Typography
                           sx={{
-                            color: trade.profit.startsWith('+') ? '#4CAF50' : '#f44336',
+                            color: trade.profit.startsWith('+') ? '#10B981' : '#EF4444',
                             fontWeight: 600,
                             mb: 0.5,
                           }}
@@ -438,7 +497,7 @@ export default function Trade() {
                         <Typography
                           variant="caption"
                           sx={{
-                            color: 'rgba(255,255,255,0.4)',
+                            color: alpha(theme.palette.text.primary, 0.5),
                           }}
                         >
                           {trade.time}

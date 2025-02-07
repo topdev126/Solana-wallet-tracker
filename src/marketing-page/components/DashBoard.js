@@ -46,11 +46,24 @@ export default function DashBoard() {
       sx={{
         background: theme.palette.mode === 'dark'
           ? 'linear-gradient(135deg, #0A1929 0%, #1E1E1E 100%)'
-          : 'linear-gradient(135deg, #F8FAFF 0%, #E6EEFF 100%)',
+          : 'linear-gradient(135deg, #F8FAFF 0%, #EDF4FF 50%, #E6F0FF 100%)',
         minHeight: '100vh',
         width: '100%',
         pt: { xs: 2, sm: 4, md: 6 },
         pb: { xs: 4, sm: 6, md: 8 },
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: theme.palette.mode === 'dark'
+            ? 'none'
+            : 'radial-gradient(circle at 50% 0%, rgba(147,197,253,0.08) 0%, rgba(147,197,253,0) 70%)',
+          pointerEvents: 'none',
+        },
       }}
     >
       <Container maxWidth="xl">

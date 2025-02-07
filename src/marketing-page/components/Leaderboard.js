@@ -1,5 +1,5 @@
 import React from "react";
-import { styled, keyframes } from "@mui/material/styles";
+import { styled, keyframes, useTheme } from "@mui/material/styles";
 import { alpha } from '@mui/material/styles';
 import {
   Avatar,
@@ -26,73 +26,6 @@ const float = keyframes`
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
 `;
-
-const StyledCard = styled(Card)(({ rank }) => ({
-  background: 'rgba(20, 25, 35, 0.7)',
-  backdropFilter: 'blur(12px)',
-  borderRadius: '16px',
-  border: '1px solid rgba(255, 255, 255, 0.05)',
-  padding: '24px',
-  transition: 'all 0.3s ease-in-out',
-  position: 'relative',
-  overflow: 'hidden',
-  '&:hover': {
-    transform: 'translateY(-5px)',
-    boxShadow: '0 8px 30px rgba(0, 0, 0, 0.12)',
-    border: rank <= 3 ? `1px solid ${getRankColor(rank, 0.3)}` : '1px solid rgba(255, 255, 255, 0.1)',
-  },
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: '2px',
-    background: rank <= 3 ? getRankColor(rank) : 'transparent',
-  },
-}));
-
-const TimeButton = styled(Button)(({ active }) => ({
-  background: active ? 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)' : 'rgba(255, 255, 255, 0.05)',
-  borderRadius: '20px',
-  padding: '8px 20px',
-  color: active ? 'white' : 'rgba(255, 255, 255, 0.7)',
-  border: 'none',
-  transition: 'all 0.3s ease',
-  '&:hover': {
-    background: active ? 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)' : 'rgba(255, 255, 255, 0.1)',
-    transform: 'translateY(-2px)',
-  },
-}));
-
-const SocialButton = styled(IconButton)(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.05)',
-  borderRadius: '12px',
-  padding: '8px',
-  transition: 'all 0.3s ease',
-  '&:hover': {
-    background: 'rgba(255, 255, 255, 0.1)',
-    transform: 'translateY(-2px)',
-  },
-}));
-
-const getRankColor = (rank, alpha = 1) => {
-  const colors = {
-    1: `rgba(255, 215, 0, ${alpha})`, // Gold
-    2: `rgba(192, 192, 192, ${alpha})`, // Silver
-    3: `rgba(205, 127, 50, ${alpha})`, // Bronze
-  };
-  return colors[rank] || `rgba(255, 255, 255, ${alpha})`;
-};
-
-const getRankIcon = (rank) => {
-  switch (rank) {
-    case 1: return <WorkspacePremiumIcon sx={{ color: getRankColor(1), animation: `${float} 3s ease-in-out infinite` }} />;
-    case 2: return <EmojiEventsIcon sx={{ color: getRankColor(2), animation: `${float} 3s ease-in-out infinite` }} />;
-    case 3: return <LocalFireDepartmentIcon sx={{ color: getRankColor(3), animation: `${float} 3s ease-in-out infinite` }} />;
-    default: return null;
-  }
-};
 
 const LeaderList = [
   {
@@ -338,24 +271,143 @@ const LeaderList = [
 ];
 
 const Leaderboard = () => {
+  const theme = useTheme();
+
+  const StyledCard = styled(Card)(({ theme, rank }) => ({
+    background: theme.palette.mode === 'dark'
+      ? alpha(theme.palette.background.paper, 0.8)
+      : 'rgba(255, 255, 255, 0.95)',
+    backdropFilter: 'blur(12px)',
+    borderRadius: '24px',
+    border: '1px solid rgba(255, 255, 255, 0.05)',
+    padding: '24px',
+    transition: 'all 0.3s ease-in-out',
+    position: 'relative',
+    overflow: 'hidden',
+    '&:hover': {
+      transform: 'translateY(-5px)',
+      boxShadow: '0 8px 30px rgba(0, 0, 0, 0.12)',
+      border: rank <= 3 ? `1px solid ${getRankColor(rank, theme, 0.3)}` : '1px solid rgba(255, 255, 255, 0.1)',
+    },
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      height: '2px',
+      background: rank <= 3 ? getRankColor(rank, theme) : 'transparent',
+    },
+  }));
+
+  const TimeButton = styled(Button)(({ theme, active }) => ({
+    background: active 
+      ? theme.palette.mode === 'dark'
+        ? 'linear-gradient(45deg, #60A5FA 30%, #93C5FD 90%)'
+        : 'linear-gradient(45deg, #3B82F6 30%, #60A5FA 90%)'
+      : theme.palette.mode === 'dark'
+        ? alpha(theme.palette.common.white, 0.05)
+        : alpha(theme.palette.primary.main, 0.08),
+    borderRadius: '20px',
+    padding: '8px 20px',
+    color: active 
+      ? '#FFFFFF'
+      : theme.palette.mode === 'dark'
+        ? 'rgba(255, 255, 255, 0.85)'
+        : alpha(theme.palette.primary.main, 0.85),
+    border: 'none',
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      background: active
+        ? theme.palette.mode === 'dark'
+          ? 'linear-gradient(45deg, #60A5FA 30%, #93C5FD 90%)'
+          : 'linear-gradient(45deg, #3B82F6 30%, #60A5FA 90%)'
+        : theme.palette.mode === 'dark'
+          ? alpha(theme.palette.common.white, 0.1)
+          : alpha(theme.palette.primary.main, 0.15),
+      transform: 'translateY(-2px)',
+    },
+  }));
+
+  const SocialButton = styled(IconButton)(({ theme }) => ({
+    background: theme.palette.mode === 'dark'
+      ? alpha(theme.palette.common.white, 0.1)
+      : alpha(theme.palette.primary.main, 0.08),
+    borderRadius: '12px',
+    padding: '8px',
+    color: theme.palette.mode === 'dark'
+      ? 'rgba(255, 255, 255, 0.85)'
+      : theme.palette.primary.main,
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      background: theme.palette.mode === 'dark'
+        ? alpha(theme.palette.common.white, 0.2)
+        : alpha(theme.palette.primary.main, 0.15),
+      transform: 'translateY(-2px)',
+    },
+  }));
+
+  const getRankColor = (rank, theme, alpha = 1) => {
+    const colors = {
+      1: theme.palette.mode === 'dark'
+        ? `rgba(255, 215, 0, ${alpha})`  // Brighter Gold
+        : `rgba(251, 191, 36, ${alpha})`, // Amber
+      2: theme.palette.mode === 'dark'
+        ? `rgba(226, 232, 240, ${alpha})` // Brighter Silver
+        : `rgba(100, 116, 139, ${alpha})`, // Slate
+      3: theme.palette.mode === 'dark'
+        ? `rgba(234, 179, 8, ${alpha})`   // Brighter Bronze
+        : `rgba(180, 83, 9, ${alpha})`,    // Darker Bronze
+    };
+    return colors[rank] || (theme.palette.mode === 'dark'
+      ? `rgba(255, 255, 255, ${alpha})`
+      : `rgba(71, 85, 105, ${alpha})`); // Default color
+  };
+
+  const getRankIcon = (rank) => {
+    const iconProps = {
+      sx: {
+        fontSize: 28,
+        mb: 1,
+        color: rank === 1 
+          ? '#FFD700' // Gold
+          : rank === 2 
+            ? '#C0C0C0' // Silver
+            : rank === 3 
+              ? '#CD7F32' // Bronze
+              : 'inherit',
+      }
+    };
+
+    if (rank === 1) return <WorkspacePremiumIcon {...iconProps} />;
+    if (rank === 2) return <EmojiEventsIcon {...iconProps} />;
+    if (rank === 3) return <LocalFireDepartmentIcon {...iconProps} />;
+    return null;
+  };
+
   const [timeFrame, setTimeFrame] = React.useState('daily');
 
   return (
     <Box
       sx={{
-        background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
+        background: theme.palette.mode === 'dark'
+          ? 'linear-gradient(135deg, #0A1929 0%, #111827 50%, #1E1E1E 100%)'
+          : 'linear-gradient(135deg, #F5F9FF 0%, #F0F6FF 50%, #EBF3FF 100%)',
         minHeight: '100vh',
         pt: 8,
         pb: 12,
+        position: 'relative',
       }}
     >
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
         <Box sx={{ mb: 6, textAlign: 'center' }}>
           <Typography
             variant="h3"
             sx={{
               fontWeight: 800,
-              background: 'linear-gradient(45deg, #FFFFFF 30%, #63B4FF 90%)',
+              background: theme.palette.mode === 'dark'
+                ? 'linear-gradient(45deg, #60A5FA 30%, #93C5FD 90%)'
+                : 'linear-gradient(45deg, #2563EB 30%, #3B82F6 90%)',
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -367,7 +419,9 @@ const Leaderboard = () => {
           <Typography
             variant="subtitle1"
             sx={{
-              color: 'rgba(255,255,255,0.6)',
+              color: theme.palette.mode === 'dark' 
+                ? 'rgba(255,255,255,0.7)'
+                : 'rgba(0,0,0,0.7)',
               maxWidth: 600,
               mx: 'auto',
               mb: 4,
@@ -400,14 +454,21 @@ const Leaderboard = () => {
                         width: 40,
                         textAlign: 'center',
                         position: 'relative',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                       }}
                     >
                       {getRankIcon(leader.number)}
                       <Typography
                         sx={{
-                          color: getRankColor(leader.number),
+                          color: getRankColor(leader.number, theme),
                           fontWeight: 700,
                           fontSize: '1.2rem',
+                          textShadow: theme.palette.mode === 'dark'
+                            ? '0 0 8px rgba(0,0,0,0.3)'
+                            : 'none',
                         }}
                       >
                         #{leader.number}
@@ -419,12 +480,26 @@ const Leaderboard = () => {
                       sx={{
                         width: 56,
                         height: 56,
-                        border: `2px solid ${getRankColor(leader.number, 0.5)}`,
+                        border: `2px solid ${getRankColor(leader.number, theme, 0.5)}`,
+                        boxShadow: theme.palette.mode === 'dark'
+                          ? '0 0 12px rgba(255,255,255,0.1)'
+                          : '0 0 12px rgba(0,0,0,0.1)',
                       }}
                     />
                     
                     <Box>
-                      <Typography variant="h6" sx={{ color: 'white', fontWeight: 600 }}>
+                      <Typography 
+                        variant="h6" 
+                        sx={{ 
+                          color: theme.palette.mode === 'dark' 
+                            ? 'rgba(255,255,255,0.95)' 
+                            : 'rgba(0,0,0,0.87)',
+                          fontWeight: 600,
+                          textShadow: theme.palette.mode === 'dark'
+                            ? '0 0 8px rgba(0,0,0,0.3)'
+                            : 'none',
+                        }}
+                      >
                         {leader.name}
                       </Typography>
                       <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
@@ -441,22 +516,50 @@ const Leaderboard = () => {
                   <Grid item xs={12} md={6}>
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 4 }}>
                       <Box sx={{ textAlign: 'right' }}>
-                        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.5)', mb: 0.5 }}>
+                        <Typography 
+                          variant="body2" 
+                          sx={{ 
+                            color: theme.palette.mode === 'dark' 
+                              ? 'rgba(255,255,255,0.7)' 
+                              : 'rgba(0,0,0,0.7)',
+                            mb: 0.5,
+                            fontWeight: 500,
+                          }}
+                        >
                           Trades (Buy/Sell)
                         </Typography>
-                        <Typography variant="h6" sx={{ color: 'white', fontWeight: 600 }}>
+                        <Typography 
+                          variant="h6" 
+                          sx={{ 
+                            color: theme.palette.mode === 'dark' 
+                              ? 'rgba(255,255,255,0.95)' 
+                              : 'rgba(0,0,0,0.87)',
+                            fontWeight: 600,
+                          }}
+                        >
                           {leader.number_of_buy}/{leader.number_of_sell}
                         </Typography>
                       </Box>
                       
                       <Box sx={{ textAlign: 'right' }}>
-                        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.5)', mb: 0.5 }}>
+                        <Typography 
+                          variant="body2" 
+                          sx={{ 
+                            color: theme.palette.mode === 'dark' 
+                              ? 'rgba(255,255,255,0.7)' 
+                              : 'rgba(0,0,0,0.7)',
+                            mb: 0.5,
+                            fontWeight: 500,
+                          }}
+                        >
                           Profit
                         </Typography>
                         <Typography
                           variant="h6"
                           sx={{
-                            color: '#4CAF50',
+                            color: theme.palette.mode === 'dark'
+                              ? '#6EE7B7'  // Lighter green for dark mode
+                              : '#059669',  // Darker green for light mode
                             fontWeight: 700,
                             fontFamily: 'monospace',
                           }}
@@ -466,8 +569,11 @@ const Leaderboard = () => {
                         <Typography
                           variant="body2"
                           sx={{
-                            color: 'rgba(255,255,255,0.7)',
+                            color: theme.palette.mode === 'dark' 
+                              ? 'rgba(255,255,255,0.7)' 
+                              : 'rgba(0,0,0,0.7)',
                             fontFamily: 'monospace',
+                            fontWeight: 500,
                           }}
                         >
                           (${leader.profit_of_usd.toLocaleString()})
