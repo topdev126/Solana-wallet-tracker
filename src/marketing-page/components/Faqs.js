@@ -1,128 +1,146 @@
 import React from "react";
-import { Avatar, Box, Link, Typography, Paper } from "@mui/material";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
+import { 
+  Box, 
+  Typography, 
+  Accordion, 
+  AccordionSummary, 
+  AccordionDetails,
+  Link,
+  alpha 
+} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useTheme } from '@mui/material/styles';
 
 const Faqs = () => {
   const [expanded, setExpanded] = React.useState(false);
+  const theme = useTheme();
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  const faqs = [
+    {
+      question: "How do I contact customer support if I have a question or issue?",
+      answer: "You can reach our customer support team by emailing support@email.com or calling our toll-free number. We're here to assist you promptly.",
+      link: "support@email.com"
+    },
+    {
+      question: "Can I return the product if it doesn't meet my expectations?",
+      answer: "Absolutely! We offer a hassle-free return policy. If you're not completely satisfied, you can return the product within [number of days] days for a full refund or exchange."
+    },
+    {
+      question: "What makes your product stand out from others in the market?",
+      answer: "Our product distinguishes itself through its adaptability, durability, and innovative features. We prioritize user satisfaction and continually strive to exceed expectations in every aspect."
+    },
+    {
+      question: "Is there a warranty on the product, and what does it cover?",
+      answer: "Yes, our product comes with a [length of warranty] warranty. It covers defects in materials and workmanship. If you encounter any issues covered by the warranty, please contact our customer support for assistance."
+    }
+  ];
+
   return (
-    <>
-      
-      <Box sx={{ width: "95vw", maxWidth: 700 }}>
-      <Typography variant="h5"  sx={{ textAlign: "left" }}>
-        FAQs
-      </Typography>
+    <Box sx={{ width: '100%' }}>
+      {faqs.map((faq, index) => (
         <Accordion
-          expanded={expanded === "panel1"}
-          onChange={handleChange("panel1")}
+          key={index}
+          expanded={expanded === `panel${index + 1}`}
+          onChange={handleChange(`panel${index + 1}`)}
+          elevation={0}
+          sx={{
+            width: '100%',
+            background: 'transparent',
+            '&:not(:last-child)': {
+              borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+            },
+            '&:before': {
+              display: 'none',
+            },
+            '&.Mui-expanded': {
+              margin: 0,
+            },
+          }}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1d-content"
-            id="panel1d-header"
+            expandIcon={
+              <ExpandMoreIcon 
+                sx={{ 
+                  color: theme.palette.primary.main,
+                  transition: 'transform 0.3s ease',
+                  transform: expanded === `panel${index + 1}` ? 'rotate(180deg)' : 'rotate(0deg)',
+                }} 
+              />
+            }
+            aria-controls={`panel${index + 1}d-content`}
+            id={`panel${index + 1}d-header`}
+            sx={{
+              px: { xs: 1, sm: 2 },
+              py: 2,
+              borderRadius: '12px',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                background: alpha(theme.palette.primary.main, 0.05),
+              },
+              '&.Mui-expanded': {
+                background: alpha(theme.palette.primary.main, 0.08),
+              },
+            }}
           >
-            <Typography component="h3" variant="subtitle2">
-              How do I contact customer support if I have a question or issue?
+            <Typography 
+              component="h3" 
+              sx={{
+                fontSize: { xs: '0.95rem', sm: '1rem' },
+                fontWeight: 600,
+                color: expanded === `panel${index + 1}` 
+                  ? theme.palette.primary.main 
+                  : theme.palette.text.primary,
+                transition: 'color 0.3s ease',
+              }}
+            >
+              {faq.question}
             </Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <Typography
-              variant="body2"
-              gutterBottom
-              sx={{ maxWidth: { sm: "100%", md: "70%" } }}
-            >
-              You can reach our customer support team by emailing
-              <Link> support@email.com </Link>
-              or calling our toll-free number. We&apos;re here to assist you
-              promptly.
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion
-          expanded={expanded === "panel2"}
-          onChange={handleChange("panel2")}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel2d-content"
-            id="panel2d-header"
+          <AccordionDetails
+            sx={{
+              px: { xs: 1, sm: 2 },
+              py: 2,
+              background: alpha(theme.palette.background.paper, 0.4),
+              borderBottomLeftRadius: '12px',
+              borderBottomRightRadius: '12px',
+            }}
           >
-            <Typography component="h3" variant="subtitle2">
-              Can I return the product if it doesn&apos;t meet my expectations?
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
             <Typography
               variant="body2"
-              gutterBottom
-              sx={{ maxWidth: { sm: "100%", md: "70%" } }}
+              sx={{
+                color: theme.palette.text.secondary,
+                lineHeight: 1.6,
+                maxWidth: { sm: "100%", md: "90%" },
+                mb: faq.link ? 1 : 0,
+              }}
             >
-              Absolutely! We offer a hassle-free return policy. If you&apos;re
-              not completely satisfied, you can return the product within
-              [number of days] days for a full refund or exchange.
+              {faq.answer}
             </Typography>
+            {faq.link && (
+              <Link
+                href={`mailto:${faq.link}`}
+                sx={{
+                  color: theme.palette.primary.main,
+                  textDecoration: 'none',
+                  fontWeight: 500,
+                  display: 'inline-block',
+                  mt: 1,
+                  '&:hover': {
+                    textDecoration: 'underline',
+                  },
+                }}
+              >
+                {faq.link}
+              </Link>
+            )}
           </AccordionDetails>
         </Accordion>
-        <Accordion
-          expanded={expanded === "panel3"}
-          onChange={handleChange("panel3")}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel3d-content"
-            id="panel3d-header"
-          >
-            <Typography component="h3" variant="subtitle2">
-              What makes your product stand out from others in the market?
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography
-              variant="body2"
-              gutterBottom
-              sx={{ maxWidth: { sm: "100%", md: "70%" } }}
-            >
-              Our product distinguishes itself through its adaptability,
-              durability, and innovative features. We prioritize user
-              satisfaction and continually strive to exceed expectations in
-              every aspect.
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion
-          expanded={expanded === "panel4"}
-          onChange={handleChange("panel4")}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel4d-content"
-            id="panel4d-header"
-          >
-            <Typography component="h3" variant="subtitle2">
-              Is there a warranty on the product, and what does it cover?
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography
-              variant="body2"
-              gutterBottom
-              sx={{ maxWidth: { sm: "100%", md: "70%" } }}
-            >
-              Yes, our product comes with a [length of warranty] warranty. It
-              covers defects in materials and workmanship. If you encounter any
-              issues covered by the warranty, please contact our customer
-              support for assistance.
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-      </Box>
-    </>
+      ))}
+    </Box>
   );
 };
 

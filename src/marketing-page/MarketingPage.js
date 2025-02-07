@@ -9,9 +9,9 @@ import Trade from "./components/Trades";
 import DashBoard from "./components/DashBoard";
 import AppTheme from "../shared-theme/AppTheme";
 import Footer from "./components/Footer";
-
+import PrivacyPolicy from "./components/PrivacyPolicy";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import TermsAndConditions from "./components/TermsAndConditions";
 export default function MarketingPage(props) {
   return (
     <AppTheme {...props}>
@@ -26,6 +26,8 @@ export default function MarketingPage(props) {
             <Route path="/leaderboard" element={<WithDraw />} />
             <Route path="/trades" element={<Trade />} />
             <Route path="/account" element={<AccountDashboard />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsAndConditions />} />
           </Routes>
         </BrowserRouter>
         <Divider />

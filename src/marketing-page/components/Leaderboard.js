@@ -1,4 +1,6 @@
 import React from "react";
+import { styled, keyframes, useTheme } from "@mui/material/styles";
+import { alpha } from '@mui/material/styles';
 import {
   Avatar,
   Button,
@@ -7,9 +9,23 @@ import {
   Typography,
   IconButton,
   Box,
+  Card,
 } from "@mui/material";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import TelegramIcon from "@mui/icons-material/Telegram";
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+
+const shimmer = keyframes`
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+`;
+
+const float = keyframes`
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+`;
 
 const LeaderList = [
   {
@@ -255,90 +271,323 @@ const LeaderList = [
 ];
 
 const Leaderboard = () => {
+  const theme = useTheme();
+
+  const StyledCard = styled(Card)(({ theme, rank }) => ({
+    background: theme.palette.mode === 'dark'
+      ? alpha(theme.palette.background.paper, 0.8)
+      : 'rgba(255, 255, 255, 0.95)',
+    backdropFilter: 'blur(12px)',
+    borderRadius: '24px',
+    border: '1px solid rgba(255, 255, 255, 0.05)',
+    padding: '24px',
+    transition: 'all 0.3s ease-in-out',
+    position: 'relative',
+    overflow: 'hidden',
+    '&:hover': {
+      transform: 'translateY(-5px)',
+      boxShadow: '0 8px 30px rgba(0, 0, 0, 0.12)',
+      border: rank <= 3 ? `1px solid ${getRankColor(rank, theme, 0.3)}` : '1px solid rgba(255, 255, 255, 0.1)',
+    },
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      height: '2px',
+      background: rank <= 3 ? getRankColor(rank, theme) : 'transparent',
+    },
+  }));
+
+  const TimeButton = styled(Button)(({ theme, active }) => ({
+    background: active 
+      ? theme.palette.mode === 'dark'
+        ? 'linear-gradient(45deg, #60A5FA 30%, #93C5FD 90%)'
+        : 'linear-gradient(45deg, #3B82F6 30%, #60A5FA 90%)'
+      : theme.palette.mode === 'dark'
+        ? alpha(theme.palette.common.white, 0.05)
+        : alpha(theme.palette.primary.main, 0.08),
+    borderRadius: '20px',
+    padding: '8px 20px',
+    color: active 
+      ? '#FFFFFF'
+      : theme.palette.mode === 'dark'
+        ? 'rgba(255, 255, 255, 0.85)'
+        : alpha(theme.palette.primary.main, 0.85),
+    border: 'none',
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      background: active
+        ? theme.palette.mode === 'dark'
+          ? 'linear-gradient(45deg, #60A5FA 30%, #93C5FD 90%)'
+          : 'linear-gradient(45deg, #3B82F6 30%, #60A5FA 90%)'
+        : theme.palette.mode === 'dark'
+          ? alpha(theme.palette.common.white, 0.1)
+          : alpha(theme.palette.primary.main, 0.15),
+      transform: 'translateY(-2px)',
+    },
+  }));
+
+  const SocialButton = styled(IconButton)(({ theme }) => ({
+    background: theme.palette.mode === 'dark'
+      ? alpha(theme.palette.common.white, 0.1)
+      : alpha(theme.palette.primary.main, 0.08),
+    borderRadius: '12px',
+    padding: '8px',
+    color: theme.palette.mode === 'dark'
+      ? 'rgba(255, 255, 255, 0.85)'
+      : theme.palette.primary.main,
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      background: theme.palette.mode === 'dark'
+        ? alpha(theme.palette.common.white, 0.2)
+        : alpha(theme.palette.primary.main, 0.15),
+      transform: 'translateY(-2px)',
+    },
+  }));
+
+  const getRankColor = (rank, theme, alpha = 1) => {
+    const colors = {
+      1: theme.palette.mode === 'dark'
+        ? `rgba(255, 215, 0, ${alpha})`  // Brighter Gold
+        : `rgba(251, 191, 36, ${alpha})`, // Amber
+      2: theme.palette.mode === 'dark'
+        ? `rgba(226, 232, 240, ${alpha})` // Brighter Silver
+        : `rgba(100, 116, 139, ${alpha})`, // Slate
+      3: theme.palette.mode === 'dark'
+        ? `rgba(234, 179, 8, ${alpha})`   // Brighter Bronze
+        : `rgba(180, 83, 9, ${alpha})`,    // Darker Bronze
+    };
+    return colors[rank] || (theme.palette.mode === 'dark'
+      ? `rgba(255, 255, 255, ${alpha})`
+      : `rgba(71, 85, 105, ${alpha})`); // Default color
+  };
+
+  const getRankIcon = (rank) => {
+    const iconProps = {
+      sx: {
+        fontSize: 28,
+        mb: 1,
+        color: rank === 1 
+          ? '#FFD700' // Gold
+          : rank === 2 
+            ? '#C0C0C0' // Silver
+            : rank === 3 
+              ? '#CD7F32' // Bronze
+              : 'inherit',
+      }
+    };
+
+    if (rank === 1) return <WorkspacePremiumIcon {...iconProps} />;
+    if (rank === 2) return <EmojiEventsIcon {...iconProps} />;
+    if (rank === 3) return <LocalFireDepartmentIcon {...iconProps} />;
+    return null;
+  };
+
+  const [timeFrame, setTimeFrame] = React.useState('daily');
+
   return (
-    <Container
-      maxWidth="md"
+    <Box
       sx={{
-        pt: { xs: 6, sm: 16 },
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: { xs: 1, sm: 2 },
+        background: theme.palette.mode === 'dark'
+          ? 'linear-gradient(135deg, #0A1929 0%, #111827 50%, #1E1E1E 100%)'
+          : 'linear-gradient(135deg, #F5F9FF 0%, #F0F6FF 50%, #EBF3FF 100%)',
+        minHeight: '100vh',
+        pt: 8,
+        pb: 12,
+        position: 'relative',
       }}
     >
-      {/* Header */}
-      <Grid container justifyContent="space-between" alignItems="center">
-        <Typography variant="h5" fontWeight="bold">
-          Realized PnL Leaderboard
-        </Typography>
-        <Box>
-          <Button variant="outlined" sx={{ mx: 0.2 }}>
-            Daily
-          </Button>
-          <Button variant="outlined" sx={{ mx: 0.2 }}>
-            Weekly
-          </Button>
-          <Button variant="outlined" sx={{ mx: 0.2 }}>
-            Monthly
-          </Button> 
-        </Box>
-      </Grid>
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+        <Box sx={{ mb: 6, textAlign: 'center' }}>
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: 800,
+              background: theme.palette.mode === 'dark'
+                ? 'linear-gradient(45deg, #60A5FA 30%, #93C5FD 90%)'
+                : 'linear-gradient(45deg, #2563EB 30%, #3B82F6 90%)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              mb: 2,
+            }}
+          >
+            Top Traders Leaderboard
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            sx={{
+              color: theme.palette.mode === 'dark' 
+                ? 'rgba(255,255,255,0.7)'
+                : 'rgba(0,0,0,0.7)',
+              maxWidth: 600,
+              mx: 'auto',
+              mb: 4,
+            }}
+          >
+            Track the most successful traders in the Solana ecosystem
+          </Typography>
 
-      {/* Leaderboard Entries */}
-      {LeaderList.map((leader) => (
-        <Grid
-          container
-          alignItems="center"
-          spacing={2}
-          sx={{ mt: 2, p: 2, border: "1px solid #ccc", borderRadius: 2 }}
-          key={leader.number}
-        >
-          <Grid item>
-            <Typography variant="h6" fontWeight="bold">
-              {leader.number}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Avatar src={leader.avatar} />
-          </Grid>
-          <Grid item>
-            <Typography variant="body1" fontWeight="bold">
-              {leader.name}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <IconButton
-              color="primary"
-              component="a"
-              href={leader.twitter_link}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <TwitterIcon />
-            </IconButton>
-            <IconButton
-              color="primary"
-              component="a"
-              href={leader.telegram_link}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <TelegramIcon />
-            </IconButton>
-          </Grid>
-          <Grid item sx={{ ml: "auto", textAlign: "right" }}>
-            <Typography variant="body1">
-              {leader.number_of_buy}/{leader.number_of_sell}
-            </Typography>
-            <Typography variant="body1" fontWeight="bold" color="green">
-              +{leader.profit_of_solana} Sol ($
-              {leader.profit_of_usd.toLocaleString()})
-            </Typography>
-          </Grid>
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mb: 6 }}>
+            {['daily', 'weekly', 'monthly'].map((period) => (
+              <TimeButton
+                key={period}
+                active={timeFrame === period}
+                onClick={() => setTimeFrame(period)}
+              >
+                {period.charAt(0).toUpperCase() + period.slice(1)}
+              </TimeButton>
+            ))}
+          </Box>
+        </Box>
+
+        <Grid container spacing={3}>
+          {LeaderList.map((leader) => (
+            <Grid item xs={12} key={leader.number}>
+              <StyledCard rank={leader.number}>
+                <Grid container alignItems="center" spacing={3}>
+                  <Grid item xs={12} md={6} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box
+                      sx={{
+                        width: 40,
+                        textAlign: 'center',
+                        position: 'relative',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      {getRankIcon(leader.number)}
+                      <Typography
+                        sx={{
+                          color: getRankColor(leader.number, theme),
+                          fontWeight: 700,
+                          fontSize: '1.2rem',
+                          textShadow: theme.palette.mode === 'dark'
+                            ? '0 0 8px rgba(0,0,0,0.3)'
+                            : 'none',
+                        }}
+                      >
+                        #{leader.number}
+                      </Typography>
+                    </Box>
+                    
+                    <Avatar
+                      src={leader.avatar}
+                      sx={{
+                        width: 56,
+                        height: 56,
+                        border: `2px solid ${getRankColor(leader.number, theme, 0.5)}`,
+                        boxShadow: theme.palette.mode === 'dark'
+                          ? '0 0 12px rgba(255,255,255,0.1)'
+                          : '0 0 12px rgba(0,0,0,0.1)',
+                      }}
+                    />
+                    
+                    <Box>
+                      <Typography 
+                        variant="h6" 
+                        sx={{ 
+                          color: theme.palette.mode === 'dark' 
+                            ? 'rgba(255,255,255,0.95)' 
+                            : 'rgba(0,0,0,0.87)',
+                          fontWeight: 600,
+                          textShadow: theme.palette.mode === 'dark'
+                            ? '0 0 8px rgba(0,0,0,0.3)'
+                            : 'none',
+                        }}
+                      >
+                        {leader.name}
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+                        <SocialButton size="small" href={leader.twitter_link} target="_blank">
+                          <TwitterIcon sx={{ fontSize: 18 }} />
+                        </SocialButton>
+                        <SocialButton size="small" href={leader.telegram_link} target="_blank">
+                          <TelegramIcon sx={{ fontSize: 18 }} />
+                        </SocialButton>
+                      </Box>
+                    </Box>
+                  </Grid>
+
+                  <Grid item xs={12} md={6}>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 4 }}>
+                      <Box sx={{ textAlign: 'right' }}>
+                        <Typography 
+                          variant="body2" 
+                          sx={{ 
+                            color: theme.palette.mode === 'dark' 
+                              ? 'rgba(255,255,255,0.7)' 
+                              : 'rgba(0,0,0,0.7)',
+                            mb: 0.5,
+                            fontWeight: 500,
+                          }}
+                        >
+                          Trades (Buy/Sell)
+                        </Typography>
+                        <Typography 
+                          variant="h6" 
+                          sx={{ 
+                            color: theme.palette.mode === 'dark' 
+                              ? 'rgba(255,255,255,0.95)' 
+                              : 'rgba(0,0,0,0.87)',
+                            fontWeight: 600,
+                          }}
+                        >
+                          {leader.number_of_buy}/{leader.number_of_sell}
+                        </Typography>
+                      </Box>
+                      
+                      <Box sx={{ textAlign: 'right' }}>
+                        <Typography 
+                          variant="body2" 
+                          sx={{ 
+                            color: theme.palette.mode === 'dark' 
+                              ? 'rgba(255,255,255,0.7)' 
+                              : 'rgba(0,0,0,0.7)',
+                            mb: 0.5,
+                            fontWeight: 500,
+                          }}
+                        >
+                          Profit
+                        </Typography>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            color: theme.palette.mode === 'dark'
+                              ? '#6EE7B7'  // Lighter green for dark mode
+                              : '#059669',  // Darker green for light mode
+                            fontWeight: 700,
+                            fontFamily: 'monospace',
+                          }}
+                        >
+                          +{leader.profit_of_solana} SOL
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: theme.palette.mode === 'dark' 
+                              ? 'rgba(255,255,255,0.7)' 
+                              : 'rgba(0,0,0,0.7)',
+                            fontFamily: 'monospace',
+                            fontWeight: 500,
+                          }}
+                        >
+                          (${leader.profit_of_usd.toLocaleString()})
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </StyledCard>
+            </Grid>
+          ))}
         </Grid>
-      ))}
-    </Container>
+      </Container>
+    </Box>
   );
 };
 
