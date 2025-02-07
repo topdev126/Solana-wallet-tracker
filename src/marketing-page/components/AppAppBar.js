@@ -93,6 +93,27 @@ const float = keyframes`
   100% { transform: translateY(0px); }
 `;
 
+const rotateGradient = keyframes`
+  0% {
+    background-position: 0% 50%;
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    background-position: 100% 50%;
+    transform: rotate(3deg) scale(1.05);
+  }
+  100% {
+    background-position: 0% 50%;
+    transform: rotate(0deg) scale(1);
+  }
+`;
+
+const glowPulse = keyframes`
+  0% { text-shadow: 0 0 10px rgba(255,59,48,0.2), 0 0 20px rgba(255,59,48,0.1); }
+  50% { text-shadow: 0 0 20px rgba(255,59,48,0.4), 0 0 30px rgba(255,59,48,0.2); }
+  100% { text-shadow: 0 0 10px rgba(255,59,48,0.2), 0 0 20px rgba(255,59,48,0.1); }
+`;
+
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   position: 'fixed',
   background: 'rgba(255, 255, 255, 0.98)',
@@ -115,22 +136,61 @@ const StyledToolbar = styled(Toolbar)(({ theme, scrolled }) => ({
   transition: 'all 0.3s ease-in-out',
 }));
 
-const LogoTypography = styled(Typography)({
+const LogoTypography = styled(Typography)(({ theme }) => ({
   fontSize: '32px',
   fontWeight: 800,
-  background: 'linear-gradient(to right, #2196F3, #64B5F6, #2196F3, #64B5F6)',
-  backgroundSize: '200% auto',
+  background: `linear-gradient(
+    120deg, 
+    #FF3B30, 
+    #FF6B6B, 
+    #FF3B30, 
+    #FF8787, 
+    #FF4444,
+    #FF3B30
+  )`,
+  backgroundSize: '300% 300%',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
-  animation: `${shine} 3s linear infinite`,
+  animation: `
+    ${rotateGradient} 3s ease-in-out infinite,
+    ${glowPulse} 2s ease-in-out infinite
+  `,
   cursor: 'pointer',
-  letterSpacing: '-0.5px',
+  position: 'relative',
+  display: 'inline-block',
+  transformOrigin: 'center center',
   transition: 'all 0.3s ease',
+
   '&:hover': {
-    transform: 'scale(1.05)',
-    animation: `${shine} 1.5s linear infinite`,
-  }
-});
+    transform: 'rotate(5deg) scale(1.1)',
+    background: `linear-gradient(
+      90deg, 
+      #FF3B30, 
+      #FF6B6B, 
+      #FF3B30
+    )`,
+    backgroundSize: '200% auto',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    animation: `${shine} 3s linear infinite`,
+    textShadow: '0 0 20px rgba(255,59,48,0.3)',
+
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      bottom: '-3px',
+      left: 0,
+      width: '100%',
+      height: '2px',
+      background: 'linear-gradient(90deg, transparent, #FF3B30, transparent)',
+      opacity: 0.5,
+    },
+  },
+
+  '@media (max-width: 600px)': {
+    fontSize: '28px',
+  },
+}));
 
 const PriceDisplay = styled(Box)({
   display: 'flex',
@@ -328,7 +388,17 @@ export default function AppAppBar() {
             >
               {/* Left Section */}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <LogoTypography onClick={() => navigate("/")}>
+                <LogoTypography 
+                  onClick={() => navigate("/")}
+                  sx={{
+                    position: 'relative',
+                    zIndex: 1,
+                    '&::selection': {
+                      backgroundColor: 'transparent',
+                      textShadow: '0 0 20px rgba(255,59,48,0.5)',
+                    },
+                  }}
+                >
                   KolScan
                 </LogoTypography>
                 
