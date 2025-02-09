@@ -2,8 +2,6 @@ import * as React from "react";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { useTheme, keyframes } from "@mui/material/styles";
-import { alpha } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import CustomButton from "./CustomButton";
@@ -15,14 +13,7 @@ import TelegramIcon from "@mui/icons-material/Telegram";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Faqs from "./Faqs";
 
-const float = keyframes`
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-`;
-
 export default function DashBoard() {
-  const theme = useTheme();
-
   return (
     <Container
       maxWidth={false}

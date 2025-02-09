@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Box } from "@mui/material";
 
-const CustomButton = ({ IconComponent, link, buttonText = "Follow on Twitter", color = "white" }) => {
+const CustomButton = ({ IconComponent , link, buttonText = "Follow on Twitter", color = "white" }) => {
   return (
     <Box
       sx={{
@@ -26,8 +26,8 @@ const CustomButton = ({ IconComponent, link, buttonText = "Follow on Twitter", c
       {/* Button */}
       <Button
         variant="contained"
-        startIcon={<IconComponent />}
-        onClick={() => window.open(link, "_blank")}
+        startIcon={IconComponent ? <IconComponent /> : null}
+        onClick={() => window.location.href = link}
         sx={{
           textTransform: "none",
           fontSize: "1rem",
