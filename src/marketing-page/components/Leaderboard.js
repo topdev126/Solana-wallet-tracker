@@ -404,6 +404,7 @@ const Leaderboard = () => {
           <Typography
             variant="h3"
             sx={{
+              fontFamily:'VT323,VT323 Fallback',
               fontWeight: 800,
               background: theme.palette.mode === 'dark'
                 ? 'linear-gradient(45deg, #60A5FA 30%, #93C5FD 90%)'

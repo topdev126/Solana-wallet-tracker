@@ -2105,6 +2105,63 @@
     "rpc-websockets" "^9.0.2"
     "superstruct" "^2.0.2"
 
+"@supabase/auth-js@2.67.3":
+  "integrity" "sha512-NJDaW8yXs49xMvWVOkSIr8j46jf+tYHV0wHhrwOaLLMZSFO4g6kKAf+MfzQ2RaD06OCUkUHIzctLAxjTgEVpzw=="
+  "resolved" "https://registry.npmjs.org/@supabase/auth-js/-/auth-js-2.67.3.tgz"
+  "version" "2.67.3"
+  dependencies:
+    "@supabase/node-fetch" "^2.6.14"
+
+"@supabase/functions-js@2.4.4":
+  "integrity" "sha512-WL2p6r4AXNGwop7iwvul2BvOtuJ1YQy8EbOd0dhG1oN1q8el/BIRSFCFnWAMM/vJJlHWLi4ad22sKbKr9mvjoA=="
+  "resolved" "https://registry.npmjs.org/@supabase/functions-js/-/functions-js-2.4.4.tgz"
+  "version" "2.4.4"
+  dependencies:
+    "@supabase/node-fetch" "^2.6.14"
+
+"@supabase/node-fetch@^2.6.14", "@supabase/node-fetch@2.6.15":
+  "integrity" "sha512-1ibVeYUacxWYi9i0cf5efil6adJ9WRyZBLivgjs+AUpewx1F3xPi7gLgaASI2SmIQxPoCEjAsLAzKPgMJVgOUQ=="
+  "resolved" "https://registry.npmjs.org/@supabase/node-fetch/-/node-fetch-2.6.15.tgz"
+  "version" "2.6.15"
+  dependencies:
+    "whatwg-url" "^5.0.0"
+
+"@supabase/postgrest-js@1.18.1":
+  "integrity" "sha512-dWDnoC0MoDHKhaEOrsEKTadWQcBNknZVQcSgNE/Q2wXh05mhCL1ut/jthRUrSbYcqIw/CEjhaeIPp7dLarT0bg=="
+  "resolved" "https://registry.npmjs.org/@supabase/postgrest-js/-/postgrest-js-1.18.1.tgz"
+  "version" "1.18.1"
+  dependencies:
+    "@supabase/node-fetch" "^2.6.14"
+
+"@supabase/realtime-js@2.11.2":
+  "integrity" "sha512-u/XeuL2Y0QEhXSoIPZZwR6wMXgB+RQbJzG9VErA3VghVt7uRfSVsjeqd7m5GhX3JR6dM/WRmLbVR8URpDWG4+w=="
+  "resolved" "https://registry.npmjs.org/@supabase/realtime-js/-/realtime-js-2.11.2.tgz"
+  "version" "2.11.2"
+  dependencies:
+    "@supabase/node-fetch" "^2.6.14"
+    "@types/phoenix" "^1.5.4"
+    "@types/ws" "^8.5.10"
+    "ws" "^8.18.0"
+
+"@supabase/storage-js@2.7.1":
+  "integrity" "sha512-asYHcyDR1fKqrMpytAS1zjyEfvxuOIp1CIXX7ji4lHHcJKqyk+sLl/Vxgm4sN6u8zvuUtae9e4kDxQP2qrwWBA=="
+  "resolved" "https://registry.npmjs.org/@supabase/storage-js/-/storage-js-2.7.1.tgz"
+  "version" "2.7.1"
+  dependencies:
+    "@supabase/node-fetch" "^2.6.14"
+
+"@supabase/supabase-js@^2.48.1":
+  "integrity" "sha512-VMD+CYk/KxfwGbI4fqwSUVA7CLr1izXpqfFerhnYPSi6LEKD8GoR4kuO5Cc8a+N43LnfSQwLJu4kVm2e4etEmA=="
+  "resolved" "https://registry.npmjs.org/@supabase/supabase-js/-/supabase-js-2.48.1.tgz"
+  "version" "2.48.1"
+  dependencies:
+    "@supabase/auth-js" "2.67.3"
+    "@supabase/functions-js" "2.4.4"
+    "@supabase/node-fetch" "2.6.15"
+    "@supabase/postgrest-js" "1.18.1"
+    "@supabase/realtime-js" "2.11.2"
+    "@supabase/storage-js" "2.7.1"
+
 "@surma/rollup-plugin-off-main-thread@^2.2.3":
   "integrity" "sha512-lR8q/9W7hZpMWweNiAKU7NQerBnzQQLvi8qnTDU/fxItPhtZVMbPV3lbCwjhIlNBe9Bbr5V+KHshvWmVSG9cxQ=="
   "resolved" "https://registry.npmjs.org/@surma/rollup-plugin-off-main-thread/-/rollup-plugin-off-main-thread-2.2.3.tgz"
@@ -2501,6 +2558,11 @@
   "resolved" "https://registry.npmjs.org/@types/parse-json/-/parse-json-4.0.2.tgz"
   "version" "4.0.2"
 
+"@types/phoenix@^1.5.4":
+  "integrity" "sha512-PIzZZlEppgrpoT2QgbnDU+MMzuR6BbCjllj0bM70lWoejMeNJAxCchxnv7J3XFkI8MpygtRpzXrIlmWUBclP5A=="
+  "resolved" "https://registry.npmjs.org/@types/phoenix/-/phoenix-1.6.6.tgz"
+  "version" "1.6.6"
+
 "@types/prettier@^2.1.5":
   "integrity" "sha512-+68kP9yzs4LMp7VNh8gdzMSPZFL44MLGqiHWvttYJe+6qnuVr4Ek9wSBQoveqY/r+LwjCcU29kNVkidwim+kYA=="
   "resolved" "https://registry.npmjs.org/@types/prettier/-/prettier-2.7.3.tgz"
@@ -2629,6 +2691,13 @@
   "integrity" "sha512-osM/gWBTPKgHV8XkTunnegTRIsvF6owmf5w+JtAfOw472dptdm0dlGv4xCt6GwQRcC2XVOvvRE/0bAoQcL2QkA=="
   "resolved" "https://registry.npmjs.org/@types/ws/-/ws-8.5.13.tgz"
   "version" "8.5.13"
+  dependencies:
+    "@types/node" "*"
+
+"@types/ws@^8.5.10":
+  "integrity" "sha512-bd/YFLW+URhBzMXurx7lWByOu+xzU9+kb3RboOteXYDfW+tr+JZa99OyNmPINEGB/ahzKrEuc8rcv4gnpJmxTw=="
+  "resolved" "https://registry.npmjs.org/@types/ws/-/ws-8.5.14.tgz"
+  "version" "8.5.14"
   dependencies:
     "@types/node" "*"
 
@@ -11043,6 +11112,11 @@
   "version" "8.18.0"
 
 "ws@^8.17.1":
+  "integrity" "sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw=="
+  "resolved" "https://registry.npmjs.org/ws/-/ws-8.18.0.tgz"
+  "version" "8.18.0"
+
+"ws@^8.18.0":
   "integrity" "sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw=="
   "resolved" "https://registry.npmjs.org/ws/-/ws-8.18.0.tgz"
   "version" "8.18.0"

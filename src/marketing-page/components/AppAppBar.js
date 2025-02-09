@@ -246,7 +246,7 @@ const ActionIconButton = styled(IconButton)(({ theme }) => ({
 
 const WalletButton = styled(Button)(({ connected }) => ({
   backgroundColor: connected ? 'white' : '#2196F3',
-  color: connected ? '#1976D2' : 'white',
+  color: connected ? '#2196F3' : 'white',
   padding: '8px 20px',
   borderRadius: '8px',
   fontSize: '14px',
@@ -445,7 +445,7 @@ export default function AppAppBar() {
                 </Box>
 
                 <WalletButton
-                  connected={!!solCurrentAccount}
+                  connected={solCurrentAccount}
                   onClick={solCurrentAccount ? () => navigate("/account") : SolConnectWallet}
                 >
                   {solCurrentAccount 
