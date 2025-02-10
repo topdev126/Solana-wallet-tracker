@@ -58,40 +58,42 @@ const RealTimeTraders = () => {
         display: "grid",
         gridTemplateColumns: {
           xs: "1fr",
-          sm: "repeat(2, 1fr)",
+          sm: "repeat(auto-fit, minmax(250px, 1fr))",
           md: "repeat(3, 1fr)",
         },
         width: "100%",
-        p: 2,
+        p: 1,
         background: "rgb(255, 211, 91)",
-        maxHeight: "800px", // Set a fixed height for the container
-              overflowY: "auto", // Enable vertical scrolling when content exceeds the height
-              "&::-webkit-scrollbar": {
-                width: "8px", // Adjust width of the scrollbar
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: "rgb(255, 211, 91)", // Scrollbar thumb color
-
-              },
-              "&::-webkit-scrollbar-track": {
-                background: "rgb(255, 211, 91)", // Background color of the scrollbar track
-
-              },
+        maxHeight: "800px",
+        overflowY: "auto",
+        "&::-webkit-scrollbar": {
+          width: "8px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "rgb(200, 160, 60)", // Adjusted for contrast
+          borderRadius: "4px",
+        },
+        "&::-webkit-scrollbar-track": {
+          background: "rgb(255, 211, 91)",
+        },
       }}
     >
       {leader.map((tx) => (
-        <Paper sx={{ border: `1px solid black` }}>
+        <Paper
+          key={tx.id}
+          sx={{
+            border: "1px solid black",
+            minWidth: "250px", // Prevent items from shrinking too much
+          }}
+        >
           <Box
-            key={tx.id}
             elevation={2}
             sx={{
               display: "flex",
-              flexDirection: isMobile ? "column" : "row",
-              alignItems: isMobile ? "flex-start" : "center",
-              gap: 2,
-              pl: 2,
-              pr: 2,
-              pt: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: { xs: 1, sm: 2 }, // Reduce gap for smaller screens
+              p:1,
               borderRadius: 0,
               background: "#faf3e0",
             }}
@@ -108,9 +110,8 @@ const RealTimeTraders = () => {
                 src={tx.avatar}
                 alt={`${tx.name} pfp`}
                 sx={{
-                  textDecoration: "none",
-                  width: 40,
-                  height: 40,
+                  width: { xs: 30, sm: 40 }, // Reduce avatar size for small screens
+                  height: { xs: 30, sm: 40 },
                 }}
               />
             </Link>
@@ -141,9 +142,8 @@ const RealTimeTraders = () => {
                     src="https://kolscan.io/images/Twitter.webp"
                     alt={`${tx.name} pfp`}
                     sx={{
-                      textDecoration: "none",
-                      width: 20,
-                      height: 20,
+                      width: { xs: 15, sm: 20 }, // Reduce Twitter avatar size for small screens
+                      height: { xs: 15, sm: 20 },
                     }}
                   />
                 </Link>
@@ -161,36 +161,36 @@ const RealTimeTraders = () => {
                   alignItems: "center",
                 }}
               >
-                {tx.wallet_address.split("/").pop().substring(0, 12)}
+                {tx.wallet_address.split("/").pop().substring(0, 6)}
               </Link>
             </Tooltip>
           </Box>
+
+          {/* Transactions List */}
           <Box
             sx={{
-              maxHeight: "200px", // Set a fixed height for the container
-              overflowY: "auto", // Enable vertical scrolling when content exceeds the height
+              maxHeight: "200px",
+              overflowY: "auto",
               "&::-webkit-scrollbar": {
-                width: "8px", // Adjust width of the scrollbar
+                width: "8px",
               },
               "&::-webkit-scrollbar-thumb": {
-                backgroundColor: "#faf3e0", // Scrollbar thumb color
-
+                backgroundColor: "#faf3e0",
               },
               "&::-webkit-scrollbar-track": {
-                background: "#faf3e0", // Background color of the scrollbar track
-
+                background: "#faf3e0",
               },
             }}
           >
             {items.map((item, index) => (
               <Box
-                key={tx.id}
+                key={index}
                 elevation={2}
                 sx={{
                   display: "flex",
-                  flexDirection: isMobile ? "column" : "row",
-                  alignItems: isMobile ? "flex-start" : "center",
-                  gap: 2,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: { xs: 1, sm: 2 }, // Reduce gap on small screens
                   pl: 2,
                   pr: 2,
                   borderRadius: 0,
@@ -205,17 +205,43 @@ const RealTimeTraders = () => {
                   }}
                 >
                   {/* Left side */}
-                  <Box sx={{ display: "flex", gap: 2 }}>
-                    <Typography sx={{ color: "black" }}>{item.left[0]}</Typography>
-                    <Typography sx={{ color: "black" }}>{item.left[1]}</Typography>
+                  <Box sx={{ display: "flex", gap: { xs: 1, sm: 2 } }}>
+                    <Typography
+                      sx={{
+                        color: "black",
+                        fontSize: { xs: "12px", sm: "14px" },
+                      }}
+                    >
+                      {item.left[0]}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        color: "black",
+                        fontSize: { xs: "12px", sm: "14px" },
+                      }}
+                    >
+                      {item.left[1]}
+                    </Typography>
                   </Box>
 
                   {/* Right side */}
-                  <Box sx={{ display: "flex", gap: 2 }}>
-                    <Typography sx={{ color: "black" }}>
-                    {item.right[0]}
+                  <Box sx={{ display: "flex", gap: { xs: 1, sm: 2 } }}>
+                    <Typography
+                      sx={{
+                        color: "black",
+                        fontSize: { xs: "12px", sm: "14px" },
+                      }}
+                    >
+                      {item.right[0]}
                     </Typography>
-                    <Typography sx={{ color: "black" }}>{item.right[1]}</Typography>
+                    <Typography
+                      sx={{
+                        color: "black",
+                        fontSize: { xs: "12px", sm: "14px" },
+                      }}
+                    >
+                      {item.right[1]}
+                    </Typography>
                   </Box>
                 </Box>
               </Box>

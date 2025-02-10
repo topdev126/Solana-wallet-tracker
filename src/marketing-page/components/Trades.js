@@ -17,11 +17,12 @@ export default function DashBoard() {
       sx={{
         // overflowX: "hidden", // Ensures no horizontal scrolling
         background: "#faf3e0",
-        padding: 0, // Prevents any padding causing overflow
+        px: '5%',
       }}
     >      
       {/* Main Grid Section */}
-      <Box sx={{}}>
+      <Box sx={{borderLeft: "2px solid #000000 !important",
+        borderRight: "2px solid #000000",}}>
         <Grid container spacing={0} sx={{ width: "100%", flexWrap: "wrap" }}>
           {/* Left Column */}
           <Grid item xs={12} lg={7}>
@@ -30,7 +31,7 @@ export default function DashBoard() {
                 display: "flex",
                 flexDirection: "column",
                 p: 0,
-                borderRight: "4px solid #000000",
+                borderRight: "2px solid #000000",
               }}
             >
               

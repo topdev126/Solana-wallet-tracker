@@ -18,17 +18,16 @@ export default function DashBoard() {
     <Container
       maxWidth={false}
       disableGutters
-      sx={{
-        // overflowX: "hidden", // Ensures no horizontal scrolling
+      sx={{        
         background: "#faf3e0",
-        padding: 0, // Prevents any padding causing overflow
+        px: '5%',   
       }}
     >
       {/* Hero Section */}
       <Box
         sx={{
           textAlign: "center",
-          borderBottom: "4px solid #000000",
+          borderBottom: "2px solid #000000",
           paddingBottom: 2,
         }}
       >
@@ -64,7 +63,8 @@ export default function DashBoard() {
       </Box>
 
       {/* Main Grid Section */}
-      <Box sx={{}}>
+      <Box sx={{borderLeft: "2px solid #000000 !important",
+        borderRight: "2px solid #000000",}}>
         <Grid container spacing={0} sx={{ width: "100%", flexWrap: "wrap" }}>
           {/* Left Column */}
           <Grid item xs={12} lg={8}>
@@ -73,7 +73,7 @@ export default function DashBoard() {
                 display: "flex",
                 flexDirection: "column",
                 p: "3px",
-                borderRight: "4px solid #000000",
+                borderRight: "2px solid #000000",
               }}
             >
               {/* Search Bar */}

@@ -57,7 +57,7 @@ const Leaderboard = () => {
             p: 2,
             borderRadius: 0,
             background: "#009B77",
-            borderBottom: "2px solid #000000",
+            borderBottom: "1px solid #000000",
             // borderTop: "2px solid #000000",
           }}
         >

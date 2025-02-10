@@ -165,7 +165,7 @@ const Transactions = () => {
             borderRadius: 0,
             background: "#faf3e0",
             // borderBottom: "2px solid #000000",
-            borderTop: "2px solid #000000",
+            borderTop: "1px solid #000000",
           }}
         >
           <Link
