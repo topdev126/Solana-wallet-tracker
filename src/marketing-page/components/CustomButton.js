@@ -27,7 +27,11 @@ const CustomButton = ({ IconComponent , link, buttonText = "Follow on Twitter", 
       <Button
         variant="contained"
         startIcon={IconComponent ? <IconComponent /> : null}
-        onClick={() => window.location.href = link}
+        onClick={() => {
+          if (link) {
+            window.location.href = link;
+          }
+        }}
         sx={{
           textTransform: "none",
           fontSize: "1rem",

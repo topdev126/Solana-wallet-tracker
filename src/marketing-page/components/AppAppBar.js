@@ -2,18 +2,13 @@ import React, { useState, useContext, useEffect } from "react";
 import { styled, keyframes } from "@mui/material/styles";
 import { Box, Typography, Button, Avatar, Paper } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
 import Container from "@mui/material/Container";
 import Modal from "@mui/material/Modal"; // Import Modal
-import SearchIcon from "@mui/icons-material/Search";
-import ColorModeIconDropdown from "../../shared-theme/ColorModeIconDropdown";
 import { CryptoTrans } from "../TransFunc/CryptoTrans";
 import { ToastContainer, toast } from "react-toastify";
 import SearchBar from "./SearchBar"; // Import SearchBar component
 import { Link, useNavigate } from "react-router-dom";
 import CustomButton from "./CustomButton";
-import DoneOutlineSharpIcon from "@mui/icons-material/DoneOutlineSharp";
 import "react-toastify/dist/ReactToastify.css";
 
 const shine = keyframes`
@@ -144,9 +139,20 @@ export default function AppAppBar() {
   const [scrolled, setScrolled] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
+
+  const [bgColor, setBgColor] = useState(false);
+
   const navigate = useNavigate();
 
   const { SolConnectWallet, solCurrentAccount } = useContext(CryptoTrans);
+
+useEffect(() => {
+    const interval = setInterval(() => {
+      setBgColor((prevColor) => !prevColor);
+    }, 1000); // Change color every second
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
 
   useEffect(() => {
     const fetchSolPrice = async () => {
@@ -252,13 +258,38 @@ export default function AppAppBar() {
                 </Typography>
 
                 <Link></Link>
-                <CustomButton
-                  buttonText={
-                    solCurrentAccount
-                      ? solCurrentAccount.toString().substring(0, 6)
-                      : "Connect Wallet"
-                  }
-                />
+                <Button
+                  onClick={() => {
+                    if (!solCurrentAccount) {
+                      SolConnectWallet(); // Calls function when no wallet is connected
+                    } else {
+                      window.location.href = "/account"; // Navigates if wallet is connected
+                    }
+                  }}
+                  variant="contained"
+                  sx={{
+                    textTransform: "none",
+                    fontSize: "1rem",
+                    width: "100%",
+                    border: "1px solid rgb(0, 0, 0)  !important", // Add a solid black border
+                    borderRadius: 0, // No rounded corners
+                    transition: "all 0.5s ease-in-out",
+                    zIndex: 1, // Button stays above the div
+                    backgroundColor: bgColor?'green !important':'orange !important',
+                    background: bgColor?'green !important':'orange !important',
+                    color: "black",
+                    "&:hover": {
+                      transform: "translateX(-3px) translateY(3px)", // Moves slightly
+                      // backgroundColor: "white !important",
+                      border: "1px solid #FF5733",
+                      color: "black",
+                    },
+                  }}
+                >
+                  {solCurrentAccount
+                    ? solCurrentAccount.toString().substring(0, 6)
+                    : "Connect Wallet"}
+                </Button>
               </Box>
             </Box>
           </Box>

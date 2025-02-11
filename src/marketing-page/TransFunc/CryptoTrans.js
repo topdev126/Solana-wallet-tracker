@@ -243,8 +243,8 @@ export const CryptoProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    ethConnectWallet();
-    SolConnectWallet();
+    // ethConnectWallet();
+    // SolConnectWallet();
   }, []);
 
   return (

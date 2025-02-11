@@ -35,6 +35,7 @@ const Leaderboard = () => {
   return (
     <Box sx={{ width: "100%", maxHeight: "800px", // Set a fixed height for the container
       overflowY: "auto", // Enable vertical scrolling when content exceeds the height
+      background: "#009B77",
       "&::-webkit-scrollbar": {
         width: "8px", // Adjust width of the scrollbar
       },
@@ -45,7 +46,9 @@ const Leaderboard = () => {
       "&::-webkit-scrollbar-track": {
         background: "#009B77", // Background color of the scrollbar track
 
-      },}}>
+      },
+      
+      }}>
       {leader.map((tx, index) => (
         <Paper
           key={tx.id}
