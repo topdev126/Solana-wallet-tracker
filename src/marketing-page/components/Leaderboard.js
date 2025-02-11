@@ -18,7 +18,7 @@ const Leaderboard = () => {
 
   useEffect(() => {
     // Fetch data from the API
-    fetch("http://localhost:3002/api/data/getLeader")
+    fetch("http://24.199.120.137:3002/api/data/getLeader")
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
