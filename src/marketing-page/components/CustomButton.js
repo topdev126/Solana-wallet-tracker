@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Box } from "@mui/material";
 
-const CustomButton = ({ IconComponent , link, buttonText = "Follow on Twitter", color = "white" }) => {
+const CustomButton = ({ IconComponent , link, width="100%", buttonText = "Follow on Twitter", color = "white" }) => {
   return (
     <Box
       sx={{
@@ -35,11 +35,12 @@ const CustomButton = ({ IconComponent , link, buttonText = "Follow on Twitter", 
         sx={{
           textTransform: "none",
           fontSize: "1rem",
-          width: "100%",
+          // width: "100%",
           border: "1px solid rgb(0, 0, 0)  !important", // Add a solid black border
           borderRadius: 0, // No rounded corners
           transition: "all 0.5s ease-in-out",
           zIndex: 1, // Button stays above the div
+          width: width,
           "&:hover": {
             transform: "translateX(-3px) translateY(3px)", // Moves slightly
             backgroundColor: color,
