@@ -84,6 +84,7 @@ const RealTimeTraders = () => {
           sx={{
             border: "1px solid black",
             minWidth: "250px", // Prevent items from shrinking too much
+            borderRadius:0,
           }}
         >
           <Box
