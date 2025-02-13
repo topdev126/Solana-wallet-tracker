@@ -8,36 +8,75 @@ import {
   Chip,
   Tooltip,
   useMediaQuery,
+  CircularProgress,
 } from "@mui/material";
+import io from "socket.io-client";
 import { alpha, useTheme } from "@mui/material/styles";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
-const items = [
-  { left: ["Buy", "3 SOL"], right: ["23.3m BITBOWL", "14m"] },
-  { left: ["Sell", "50m BITBOWL"], right: ["7 SOL", "20m"] },
-  { left: ["Buy", "5 SOL"], right: ["10m BITBOWL", "8m"] },
-  { left: ["Buy", "1 SOL"], right: ["30m BITBOWL", "5m"] },
-  { left: ["Buy", "7 SOL"], right: ["50m BITBOWL", "20m"] },
-  { left: ["Buy", "7 SOL"], right: ["50m BITBOWL", "20m"] },
-  { left: ["Buy", "7 SOL"], right: ["50m BITBOWL", "20m"] },
-  { left: ["Sell", "50m BITBOWL"], right: ["7 SOL", "20m"] },
-  { left: ["Buy", "7 SOL"], right: ["50m BITBOWL", "20m"] },
-  { left: ["Sell", "50m BITBOWL"], right: ["7 SOL", "20m"] },
-  { left: ["Buy", "7 SOL"], right: ["50m BITBOWL", "20m"] },
-  { left: ["Buy", "7 SOL"], right: ["50m BITBOWL", "20m"] },
-  { left: ["Sell", "50m BITBOWL"], right: ["7 SOL", "20m"] },
-  { left: ["Buy", "7 SOL"], right: ["50m BITBOWL", "20m"] },
-  { left: ["Buy", "7 SOL"], right: ["50m BITBOWL", "20m"] },
-];
+
+const socket = io("http://localhost:5000"); // Connect to Flask-SocketIO server
+
 const RealTimeTraders = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [trades, setTrades] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const [leader, setLeader] = useState([]);
+  const getTimeDifference = (dateTime1, dateTime2) => {
+    const date1 = new Date(dateTime1);
+    const date2 = new Date(dateTime2);
+    // console.log("second date---", date2);
+    let diffInSeconds = Math.abs((date1 - date2) / 1000); // Difference in seconds
 
+    if (diffInSeconds < 60) {
+      return `${diffInSeconds}s`; // Seconds
+    }
+
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes}m`; // Minutes
+    }
+
+    const diffInHours = Math.floor(diffInSeconds / 3600);
+    if (diffInHours < 24) {
+      return `${diffInHours}h`; // Hours
+    }
+
+    const diffInDays = Math.floor(diffInSeconds / 86400);
+    if (diffInDays < 30) {
+      return `${diffInDays}d`; // Days
+    }
+
+    const diffInMonths = Math.floor(diffInDays / 30);
+    if (diffInMonths < 12) {
+      return `${diffInMonths}mon`; // Months
+    }
+
+    const diffInYears = Math.floor(diffInMonths / 12);
+    return `${diffInYears}y`; // Years
+  };
+
+  function getCurrentCETTime() {
+    const now = new Date();
+
+    const options = {
+      timeZone: "Europe/Berlin", // CET (GMT+0100, adjusts for DST)
+      year: "numeric",
+      month: "short", // "Feb"
+      day: "2-digit", // "12"
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false, // 24-hour format
+    };
+
+    return now.toLocaleString("en-US", options).replace(",", "");
+  }
   useEffect(() => {
-    // Fetch data from the API
-    fetch("http://24.199.120.137:3002/api/data/getLeader")
+    setLoading(true);
+    fetch("http://localhost:5000/trades")
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -45,12 +84,66 @@ const RealTimeTraders = () => {
         return response.json();
       })
       .then((propertyData) => {
-        setLeader(propertyData);
+        const sortedTrades = Object.entries(propertyData["trades"])
+          .sort((a, b) => new Date(b[1][0].Time) - new Date(a[1][0].Time))
+          .reduce((acc, [wallet, transactions]) => {
+            acc[wallet] = transactions;
+            return acc;
+          }, {});
+
+        setTrades(sortedTrades);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
+        setError(error.message);
+        setLoading(false);
       });
+
+    socket.on("new_trade", (newTrade) => {
+      console.log("New Trade: ", newTrade);
+      setTrades((prevTrades) => {
+        const updatedTrades = { ...prevTrades };
+
+        if (!updatedTrades[newTrade.Wallet]) {
+          updatedTrades[newTrade.Wallet] = [];
+        }
+
+        const isDuplicate = updatedTrades[newTrade.Wallet].some(
+          (trade) => trade.Time === newTrade.Time
+        );
+
+        if (!isDuplicate) {
+          updatedTrades[newTrade.Wallet] = [
+            newTrade,
+            ...updatedTrades[newTrade.Wallet],
+          ];
+        }
+
+        const sortedTrades = Object.entries(updatedTrades)
+          .sort((a, b) => new Date(b[1][0].Time) - new Date(a[1][0].Time))
+          .reduce((acc, [wallet, transactions]) => {
+            acc[wallet] = transactions;
+            return acc;
+          }, {});
+
+        return sortedTrades;
+      });
+    });
+
+    return () => {
+      socket.off("new_trade");
+    };
   }, []);
+  const [IncreaseNum, setIncreaseNum] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIncreaseNum((prevNum) => prevNum + 2); // Increase by 2 every 2 seconds
+    }, 2000); // Run every 2 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []); // Run once on mount
+  console.log("************", trades);
 
   return (
     <Box
@@ -78,178 +171,229 @@ const RealTimeTraders = () => {
         },
       }}
     >
-      {leader.map((tx) => (
-        <Paper
-          key={tx.id}
-          sx={{
-            border: "1px solid black",
-            minWidth: "250px", // Prevent items from shrinking too much
-            borderRadius:0,
-          }}
+      {loading ? (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="100vh"
         >
-          <Box
-            elevation={2}
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              gap: { xs: 1, sm: 2 }, // Reduce gap for smaller screens
-              p:1,
-              borderRadius: 0,
-              background: "#faf3e0",
-            }}
-          >
-            <Link
-              href={`${tx.id}.html`}
-              sx={{
-                textDecoration: "none",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <Avatar
-                src={tx.avatar}
-                alt={`${tx.name} pfp`}
-                sx={{
-                  width: { xs: 30, sm: 40 }, // Reduce avatar size for small screens
-                  height: { xs: 30, sm: 40 },
-                }}
-              />
-            </Link>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <>
+          {" "}
+          {Object.entries(trades).map(([wallet, transactions]) => {
+            const username = transactions[0]?.User_Name || "Unknown"; // Fix undefined username
+            const Avatar_link = transactions[0]?.Avatar || "Unknown"; // Fix undefined username
 
-            <Box sx={{ flexGrow: 1 }}>
-              <Box
-                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}
-              >
-                <Link
-                  href={`${tx.id}.html`}
-                  sx={{
-                    textDecoration: "none",
-                    color: "black",
-                    fontWeight: 800,
-                  }}
-                >
-                  {tx.username}
-                </Link>
-                <Link
-                  href={`${tx.twitter_link}`}
-                  sx={{
-                    textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Avatar
-                    src="https://kolscan.io/images/Twitter.webp"
-                    alt={`${tx.name} pfp`}
-                    sx={{
-                      width: { xs: 15, sm: 20 }, // Reduce Twitter avatar size for small screens
-                      height: { xs: 15, sm: 20 },
-                    }}
-                  />
-                </Link>
-              </Box>
-            </Box>
-
-            <Tooltip title="View transaction">
-              <Link
-                href={`${tx.wallet_address}`}
+            return (
+              <Paper
+                key={wallet}
                 sx={{
-                  color: "black",
-                  fontWeight: 800,
-                  textDecoration: "none",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                {tx.wallet_address.split("/").pop().substring(0, 6)}
-              </Link>
-            </Tooltip>
-          </Box>
-
-          {/* Transactions List */}
-          <Box
-            sx={{
-              maxHeight: "200px",
-              overflowY: "auto",
-              "&::-webkit-scrollbar": {
-                width: "8px",
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: "#faf3e0",
-              },
-              "&::-webkit-scrollbar-track": {
-                background: "#faf3e0",
-              },
-            }}
-          >
-            {items.map((item, index) => (
-              <Box
-                key={index}
-                elevation={2}
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: { xs: 1, sm: 2 }, // Reduce gap on small screens
-                  pl: 2,
-                  pr: 2,
-                  borderRadius: 0,
-                  background: "#faf3e0",
+                  border: "1px solid black",
+                  minWidth: "250px", // Prevent items from shrinking too much
                 }}
               >
                 <Box
+                  elevation={2}
                   sx={{
                     display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: { xs: 1, sm: 2 }, // Reduce gap for smaller screens
+                    p: 1,
+                    borderRadius: 0,
+                    background: "#faf3e0",
                   }}
                 >
-                  {/* Left side */}
-                  <Box sx={{ display: "flex", gap: { xs: 1, sm: 2 } }}>
-                    <Typography
+                  <Link
+                    href={`${wallet}.html`}
+                    sx={{
+                      textDecoration: "none",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Avatar
+                      src={Avatar_link}
+                      alt={`user pfp`}
                       sx={{
-                        color: "black",
-                        fontSize: { xs: "12px", sm: "14px" },
+                        width: { xs: 30, sm: 40 },
+                        height: { xs: 30, sm: 40 },
                       }}
-                    >
-                      {item.left[0]}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        color: "black",
-                        fontSize: { xs: "12px", sm: "14px" },
-                      }}
-                    >
-                      {item.left[1]}
-                    </Typography>
-                  </Box>
+                    />
+                  </Link>
 
-                  {/* Right side */}
-                  <Box sx={{ display: "flex", gap: { xs: 1, sm: 2 } }}>
-                    <Typography
+                  <Box sx={{ flexGrow: 1 }}>
+                    <Box
                       sx={{
-                        color: "black",
-                        fontSize: { xs: "12px", sm: "14px" },
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        mb: 0.5,
                       }}
                     >
-                      {item.right[0]}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        color: "black",
-                        fontSize: { xs: "12px", sm: "14px" },
-                      }}
-                    >
-                      {item.right[1]}
-                    </Typography>
+                      <Link
+                        href={`${wallet}.html`}
+                        sx={{
+                          textDecoration: "none",
+                          color: "black",
+                          fontWeight: 800,
+                        }}
+                      >
+                        {username}
+                      </Link>
+                      <Link
+                        href={`https://x.com/${username}`} // Fixed Twitter link
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                          textDecoration: "none",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Avatar
+                          src="/images/Twitter.webp" // Fixed Twitter image path
+                          alt={`${username} Twitter`}
+                          sx={{
+                            width: { xs: 15, sm: 20 },
+                            height: { xs: 15, sm: 20 },
+                          }}
+                        />
+                      </Link>
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
-            ))}
-          </Box>
-        </Paper>
-      ))}
+
+                {/* Transactions List */}
+                <Box
+                  sx={{
+                    maxHeight: "200px",
+                    overflowY: "auto",
+                    "&::-webkit-scrollbar": {
+                      width: "8px",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                      backgroundColor: "#faf3e0",
+                    },
+                    "&::-webkit-scrollbar-track": {
+                      background: "#faf3e0",
+                    },
+                  }}
+                >
+                  {transactions.map((item, index) => (
+                    <Box
+                      key={index}
+                      elevation={2}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: { xs: 1, sm: 2 },
+                        pl: 2,
+                        pr: 2,
+                        borderRadius: 0,
+                        background: "#faf3e0",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          width: "100%",
+                        }}
+                      >
+                        {/* Left side */}
+                        <Box sx={{ display: "flex", gap: { xs: 1, sm: 2 } }}>
+                          <Typography
+                            sx={{
+                              color: item.Buy_Sell === "Buy" ? "green" : "red", // Change color based on Buy/Sell
+                              fontSize: { xs: "12px", sm: "14px" },
+                              // width: "60px", // Set a fixed width for both 'Buy' and 'Sell'
+                              display: "inline-block", // To ensure width is respected
+                            }}
+                          >
+                            {item.Buy_Sell}
+                          </Typography>
+                          {item.Buy_Sell === "Buy" && (
+                            <Typography
+                              sx={{
+                                color: "black",
+                                fontSize: { xs: "12px", sm: "14px" },
+                              }}
+                            >
+                              {item.Sol_Amount} sol
+                            </Typography>
+                          )}
+                          {item.Buy_Sell === "Sell" && (
+                            <Typography
+                              sx={{
+                                color: "black",
+                                fontSize: { xs: "12px", sm: "14px" },
+                              }}
+                            >
+                              {item.Token_Amount} {item.Token}
+                            </Typography>
+                          )}
+                        </Box>
+
+                        {/* Right side */}
+                        <Box sx={{ display: "flex", gap: { xs: 1, sm: 2 } }}>
+                          {item.Buy_Sell === "Buy" && (
+                            <Typography
+                              sx={{
+                                color: "black",
+                                fontSize: { xs: "12px", sm: "14px" },
+                              }}
+                            >
+                              {item.Token_Amount} {item.Token}
+                            </Typography>
+                          )}
+                          {item.Buy_Sell === "Sell" && (
+                            <Typography
+                              sx={{
+                                color: "black",
+                                fontSize: { xs: "12px", sm: "14px" },
+                              }}
+                            >
+                              {item.Sol_Amount} sol
+                            </Typography>
+                          )}
+
+                          <Typography
+                            sx={{
+                              color: "black",
+                              fontSize: { xs: "12px", sm: "14px" },
+                            }}
+                          >
+                            <Link
+                              href={item.Link} // URL to open in the new tab
+                              target="_blank" // Open in a new tab
+                              rel="noopener noreferrer" // Security best practice when using target="_blank"
+                              sx={{
+                                textDecoration: "none",
+                                color: "inherit", // Keeps the text color consistent
+                                cursor: "pointer", // Pointer cursor effect
+                              }}
+                            >
+                              {getTimeDifference(
+                                getCurrentCETTime(),
+                                item.Time
+                              )}
+                            </Link>
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+              </Paper>
+            );
+          })}
+        </>
+      )}
     </Box>
   );
 };
