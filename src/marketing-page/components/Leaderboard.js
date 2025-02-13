@@ -18,7 +18,7 @@ const Leaderboard = () => {
 
   useEffect(() => {
     // Fetch data from the API
-    fetch("http://24.199.120.137:3002/api/data/getLeader")
+    fetch("http://localhost:5000/leader")
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -33,22 +33,23 @@ const Leaderboard = () => {
       });
   }, []);
   return (
-    <Box sx={{ width: "100%", maxHeight: "800px", // Set a fixed height for the container
-      overflowY: "auto", // Enable vertical scrolling when content exceeds the height
-      background: "#009B77",
-      "&::-webkit-scrollbar": {
-        width: "8px", // Adjust width of the scrollbar
-      },
-      "&::-webkit-scrollbar-thumb": {
-        backgroundColor: "#009B77", // Scrollbar thumb color
-
-      },
-      "&::-webkit-scrollbar-track": {
-        background: "#009B77", // Background color of the scrollbar track
-
-      },
-      
-      }}>
+    <Box
+      sx={{
+        width: "100%",
+        maxHeight: "800px", // Set a fixed height for the container
+        overflowY: "auto", // Enable vertical scrolling when content exceeds the height
+        background: "#009B77",
+        "&::-webkit-scrollbar": {
+          width: "8px", // Adjust width of the scrollbar
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "#009B77", // Scrollbar thumb color
+        },
+        "&::-webkit-scrollbar-track": {
+          background: "#009B77", // Background color of the scrollbar track
+        },
+      }}
+    >
       {leader.map((tx, index) => (
         <Paper
           key={tx.id}
@@ -69,8 +70,8 @@ const Leaderboard = () => {
               display: "flex", // Enables flexbox
               alignItems: "center", // Centers content vertically
               justifyContent: "center", // Centers content horizontally
-              height: "100%", // Ensures Box takes full height for vertical 
-              width:30,
+              height: "100%", // Ensures Box takes full height for vertical
+              width: 30,
             }}
           >
             {index === 0 ? (
@@ -109,7 +110,7 @@ const Leaderboard = () => {
             />
           </Link>
 
-         <Box sx={{ flexGrow: 1 }}> 
+          <Box sx={{ flexGrow: 1 }}>
             <Box
               sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}
             >

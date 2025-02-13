@@ -1,31 +1,15 @@
 import React, { useState } from "react";
-import {
-  TextField,
-  IconButton,
-  Paper,
-  List,
-  ListItem,
-  Box,
-  Typography,
-} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { TextField, IconButton, Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-
-const options = ["Option 1", "Option 2", "Option 3", "Option 4"];
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredOptions, setFilteredOptions] = useState([]);
-
+  const navigate = useNavigate();
   const handleSearchChange = (event) => {
-    const value = event.target.value;
-    setSearchTerm(value);
-    setFilteredOptions(
-      value
-        ? options.filter((option) =>
-            option.toLowerCase().includes(value.toLowerCase())
-          )
-        : []
-    );
+    if (searchTerm.trim() !== "") {
+      navigate(`/account/${searchTerm}`);
+    }
   };
 
   return (
@@ -43,7 +27,12 @@ const SearchBar = () => {
       >
         <TextField
           value={searchTerm}
-          onChange={handleSearchChange}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearchChange();
+            }
+          }}
           placeholder="Enter Wallet Address"
           fullWidth
           sx={{
@@ -73,50 +62,13 @@ const SearchBar = () => {
             width: "40px",
             height: "40px",
             background: "white  !important",
-            color:'black',
+            color: "black",
             backgroundColor: "#faf3e0  !important",
           }}
         >
           <SearchIcon />
         </IconButton>
       </Box>
-
-      {filteredOptions.length > 0 && (
-        <Paper
-          elevation={0}
-          sx={{
-            position: "absolute",
-            mt: 1,
-            width: "calc(100% - 32px)", // Adjust based on parent padding
-
-            backdropFilter: "blur(10px)",
-            overflow: "hidden",
-            zIndex: 1000,
-          }}
-        >
-          <List sx={{ py: 1 }}>
-            {filteredOptions.map((option, index) => (
-              <ListItem
-                key={index}
-                button
-                sx={{
-                  py: 1,
-                  px: 2,
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: "0.95rem",
-                    fontWeight: 500,
-                  }}
-                >
-                  {option}
-                </Typography>
-              </ListItem>
-            ))}
-          </List>
-        </Paper>
-      )}
     </Box>
   );
 };

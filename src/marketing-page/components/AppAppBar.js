@@ -48,6 +48,7 @@ export default function AppAppBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [bgColor, setBgColor] = useState(false);
   const navigate = useNavigate();
+  
   const { SolConnectWallet, solCurrentAccount } = useContext(CryptoTrans);
 
   useEffect(() => {

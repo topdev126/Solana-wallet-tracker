@@ -6,6 +6,9 @@ import Trade from "./components/Trades";
 import DashBoard from "./components/DashBoard";
 import AppTheme from "../shared-theme/AppTheme";
 import Footer from "./components/Footer";
+// import AccountDetail from "./components/AccountDetail";
+import AccountDetail from "./components/AccountDashboard";
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 export default function MarketingPage(props) {
   return (
@@ -18,6 +21,7 @@ export default function MarketingPage(props) {
           <Routes>
             <Route exact path="/" element={<DashBoard />} />
             <Route path="/trades" element={<Trade />} />
+            <Route path="/account/:id" element={<AccountDetail />} />
           </Routes>
         </BrowserRouter>
         <Divider />
